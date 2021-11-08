@@ -32,10 +32,10 @@ Fact andb_true : forall (b:boolean), (andb Vrai b) = b.
 Fact andb_true2 : forall (b:boolean), (andb b Vrai) = b.
   intro.
   case b.
-    - simpl.
-      reflexivity.
-    - simpl.
-      reflexivity.
+  - simpl.
+  reflexivity.
+  - simpl.
+  reflexivity.
   Qed.
 
 Fact andb_true3 : forall (b:boolean), (andb b b) = b.
