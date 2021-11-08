@@ -1,0 +1,7 @@
+(library
+ (name dslprop))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
