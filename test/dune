@@ -1,3 +1,4 @@
-(test
- (name dslprop_test)
+(tests
+ (names dslprop_test)
+ (package alcotest)
  (libraries alcotest stdio dslprop))

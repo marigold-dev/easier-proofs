@@ -1,3 +1,5 @@
 open Dslprop
 
-let () = print_string (GenerateProofs.compile "")
+let () =
+  let buff = Lexing.from_channel stdin in
+  print_string (GenerateProofs.compile buff)

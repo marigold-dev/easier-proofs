@@ -1,7 +1,6 @@
 open Ast
 
-let parse (s : string) : program =
-  let lexbuf = Lexing.from_string s in
+let parse (lexbuf : Lexing.lexbuf) : program =
   let ast = Parser.prog Lexer.read lexbuf in
   ast
 
@@ -50,5 +49,5 @@ let generatedProofs (p : program) : string = match p with
     let proofs = List.map property properties in
     String.concat "" ((turnToComment nameTarget) :: proofs)
 
-let compile (s : string) : string =
-  s |> parse |> generatedProofs
+let compile (lexbuf : Lexing.lexbuf) : string =
+  lexbuf |> parse |> generatedProofs
