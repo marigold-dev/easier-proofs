@@ -1,0 +1,3 @@
+(test
+ (name dslprop_test)
+ (libraries alcotest stdio dslprop))

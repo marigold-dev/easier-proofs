@@ -18,7 +18,7 @@ let case (n : int) (b : bop) : string =
 let determineProperStyle (h : proofs_helper) (b : bop) : string = match h,b with
   | Straight, Equal -> "auto."
   | Straight, Diff -> "discriminate."
-  | Case n, b -> "destruct "^".\n"^(case n b)
+  | Case n, b -> "destruct.\n"^(case n b)
 
 let bopToString (b : bop) : string = match b with
   | Equal -> "="
@@ -31,9 +31,10 @@ let arg (a : arg) : string = match a with
   | ASTArg (id,typ) -> " ("^id^":"^typ^") "
 
 let assertion_descr (ad : assertion_descr): string = match ad with
-  | ASTAssertD (factName, args, asser) ->
+  | ASTAssertD (factName, Some(args), asser) ->
     let args_ = List.map arg args in
     factName ^ ": forall" ^ (String.concat "" args_) ^ ", " ^ (assertion asser)
+  | ASTAssertD (factName,_,asser) -> factName^" : "^(assertion asser)
 
 
 let property (p : property) : string = match p with

@@ -11,7 +11,7 @@ In "examples" dir we have a ocaml file, a coq file (generated with coq-of-ocaml)
 3. Add tests for existing kind of proofs handled.
 4. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
 5. ugly code actually.
+6. "case" simple proofs doesn't work as i treat the assertion as a string for now, because i have to know the variable i want to "case". 
 
 ## Kind of proofs possible
 1. [WIP] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
-2. [WIP] "case/destruct" simple proofs (all cases are solvable with auto).

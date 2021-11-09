@@ -41,7 +41,7 @@ properties_descr:
     | property_descr; SEMICOLON; properties_descr {$1 :: $3}
     ;
 assertion_descr:
-    | id = ID; ag = args; COLON; ass = assertion { ASTAssertD (id,ag,ass) }
+    | id = ID; ag = option(args); COLON; ass = assertion { ASTAssertD (id,ag,ass) }
     ;
 arg: LPAREN; name = ID; COLON; typ = ID; RPAREN {ASTArg (name,typ)};
 args: arg {[$1]}

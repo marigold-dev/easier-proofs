@@ -14,7 +14,7 @@ program ::=
     | property of id {assertion_descriptor proofs_helper}
 properties_descriptor ::= assertion_descriptor proofs_helper
     | assertion_descriptor proofs_helper; properties_descriptor
-assertion_descriptor ::= id args : assertion.
+assertion_descriptor ::= id (args)* : assertion.
 assertion ::= id binOp id
 binOp ::= = | <> // straight va pas reagir pareil si c'est un egal ou un different.
 args ::= (arg),args | (arg)

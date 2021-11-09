@@ -1,5 +1,6 @@
 (library
- (name dslprop))
+ (name dslprop)
+ (public_name dslprop))
 
 (menhir
  (modules parser))

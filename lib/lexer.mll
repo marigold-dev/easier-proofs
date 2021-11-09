@@ -6,8 +6,8 @@ exception SyntaxError of string
 let whitechar = [' ' '\t' '\n']+
 let digit = ['0'-'9']
 let nat = digit+
-let alphanum = ['a'-'z' 'A'-'Z' '0'-'9']
-let id = alphanum+
+let alpha = ['a'-'z' 'A'-'Z']
+let id = alpha+digit*
 
 rule read =
     parse
