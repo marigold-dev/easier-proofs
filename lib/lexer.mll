@@ -22,7 +22,7 @@ rule read =
     | ":" {COLON}
     | ";" {SEMICOLON}
     | "-" {MINUS}
-    | '"' { read_string (Buffer.create 17) lexbuf}
+    | '"' {read_string (Buffer.create 17) lexbuf}
     | "straight" {STRAIGHT}
     | "case" {CASE}
     | "of" {OF}

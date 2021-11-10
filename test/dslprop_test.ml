@@ -1,7 +1,7 @@
 open Dslprop
 
-let andbtrue_straight_expected = "(* Proofs for andb *)\nFact andbTrue1: forall (b:boolean) , andb Vrai b = b.\nauto.\nQed."
-let inequal_nat_straight_expected = "(* Proofs for diff *)\nFact diff : 42 <> 41.\ndiscriminate.\nQed."
+let andbtrue_straight_expected = "(* ----PROOFS---- *)\n(* Proofs for andb *)\n\nFact andbTrue1 : forall  (b:boolean) ,andb Vrai b=b.\nauto.\nQed.\n"
+let inequal_nat_straight_expected = "(* ----PROOFS---- *)\n(* Proofs for diff *)\n\nFact diff : 42<>41.\ndiscriminate.\nQed.\n"
 
 let andtrue_straight = "property of andb { andbTrue1 (b:boolean) : \"andb Vrai b\" = \"b\" - straight }"
 let inequal_nat_straight = "property of diff { diff : \"42\" <> \"41\" - straight }"

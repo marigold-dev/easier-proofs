@@ -81,3 +81,11 @@ Fact orb_false2 : forall (b:boolean), (orb Faux b) = b.
   simpl.
   reflexivity.
   Qed.
+
+(* ----PROOFS---- *)
+(* Proofs for andb *)
+Fact andbTrue1 : forall  (b:boolean) ,andb b Vrai=b.
+destruct b.
+-auto.
+-auto.
+Qed.  

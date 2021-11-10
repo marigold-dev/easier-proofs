@@ -1,9 +1,11 @@
 #!/bin/bash
 
-for prog in examples/bool/props/*
+for prog in examples/bool/props/*.properties
 do
     printf "$prog : "
     res=$(dune exec -- easierproof < $prog)
-    printf "output : \n \e[42m $res \e[0m \n"
+    leftPartFileName=$(echo $prog | cut -d'.' -f 1)
+    rightPart=".v"
+    $(echo $res > "$leftPartFileName$rightPart")
 
 done
