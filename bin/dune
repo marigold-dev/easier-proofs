@@ -1,5 +1,3 @@
 (executable
  (name main)
- (public_name easierproof)
- (package dslprop)
  (libraries dslprop stdio))
