@@ -1,4 +1,5 @@
 open Ast
+open Format
 
 
 exception NotSupportedYet
@@ -8,74 +9,64 @@ let parse (lexbuf : Lexing.lexbuf) : program =
   let ast = Parser.prog Lexer.read lexbuf in
   ast
 
-let turnToComment (s : string) : string =
-  "(* "^s^" *)\n"
-
 let bopToString (b : bop) : string = match b with
   | Equal -> "="
   | Diff -> "<>"
 
-let arg_handle (a : arg) : string = match a with
-  | ASTArg (id,typ) -> " ("^id^":"^typ^") "
+let arg_handle (fmt : formatter) (a : arg) : unit = match a with
+  | ASTArg (id,typ) -> fprintf fmt " (%s:%s) " id typ
 
-let case (n : int) (b : bop) : string =
-  let rec case_aux n_ acc = match n_,b with
-    | 0,_ -> acc
-    | v,Equal -> case_aux (v-1) (acc ^ "-auto.\n")
-    | v,Diff -> case_aux (v-1) (acc ^ "-discriminate.\n")
-  in case_aux n ""
+let case (fmt : formatter) (n : int) (b : bop) : unit =
+  let rec case_aux n_ = match n_,b with
+    | 0,_ -> ()
+    | v,Equal -> fprintf fmt "@[-auto.@]"; case_aux (v-1)
+    | v,Diff -> fprintf fmt "@[-discriminate.@]"; case_aux (v-1)
+  in case_aux n
 
-let generateTactics (h : proofs_helper) (b : bop) : string = match h,b with
-  | Straight, Equal -> "auto."
-  | Straight, Diff -> "discriminate."
-  | Case n, b -> "destruct.\n"^(case n b)
-
-let straightTactics (b : bop) : string = match b with
-  | Equal -> "auto."
-  | Diff -> "discriminate."
+let straightTactics (fmt : formatter) (b : bop) : unit = match b with
+  | Equal -> fprintf fmt "@[<v 0>auto.@,@]"
+  | Diff -> fprintf fmt "@[<v 0>discriminate.@,@]"
 
 (* The most "atomic" proofs without variables *)
-let noVarProof (h: proofs_helper) (b : bop) : string = match h with
-  | Straight -> straightTactics b ^ "\n" ^ "Qed." ^ "\n"
+let noVarProof (fmt : formatter) (h: proofs_helper) (b : bop) : unit = match h with
+  | Straight -> straightTactics fmt b; fprintf fmt "@[Qed.@]"
   | _ -> raise (IncoherentHelper "Can't use a case tactic without variable to case on")
 
 (* Simple proofs with one variable *)
-let oneVarProof (h : proofs_helper) (b : bop) (arg : arg) = match h with
-  | Straight -> straightTactics b ^ "\n" ^ "Qed." ^ "\n"
+let oneVarProof (fmt : formatter ) (h : proofs_helper) (b : bop) (arg : arg)  : unit = match h with
+  | Straight -> straightTactics fmt b; fprintf fmt "@[Qed.@]"
   | Case n -> match arg with
-              | ASTArg (name,_) -> "destruct "^name^"."^"\n"^(case n b) ^ "Qed." ^ "\n"
+              | ASTArg (name,_) -> fprintf fmt "@[destruct %s@]" name;case fmt n b; fprintf fmt "@[Qed.@]"
 (*
   proof_helper -> the annotation which help the generator to find 
   the proper proof style for the assertion
 
-  for now i can generate proof with 0 or 1 variable.
+  for now I can generate proof with 0 or 1 variable.
 *)
-let assertion_annoted_handle (aa : assertion_annoted) : string = match aa with
-  | ASTAssertAn (assertionName, Some(args), ASTAssert(left,bop,right), proof_helper) ->
-    let headerFact = "Fact "^assertionName^" : forall " in
-    let argsCompiled = String.concat "" (headerFact :: (List.map arg_handle args)) in
-    let assertCompiled = argsCompiled ^ "," ^ left ^ (bopToString bop) ^ right ^ "." ^ "\n" in
-    let proof = match args with
-                | [var] -> oneVarProof proof_helper bop var
-                | _ -> raise (NotSupportedYet)
-    in assertCompiled ^ proof
-  | ASTAssertAn (assertionName, None, ASTAssert(left,bop,right), proof_helper) -> 
-    let headerFact = "Fact "^assertionName^" : " in
-    let assertCompiled = headerFact ^ left ^ (bopToString bop) ^ right ^ "." ^ "\n" in
-    assertCompiled ^ (noVarProof proof_helper bop)
+let assertion_annoted_handle (fmt : formatter) (aa : assertion_annoted) : unit = match aa with
+  | ASTAssertAn ({assertName=assertionName;args=Some(args);assertt=ASTAssert(left,bop,right);ph=proof_helper}) ->
+    fprintf fmt "Fact %s : forall " assertionName;
+    pp_print_list arg_handle fmt args;
+    fprintf fmt "@[<v>, %s %s %s.@,@]" left (bopToString bop) right;
+    (match args with
+      | [var] -> oneVarProof fmt proof_helper bop var
+      | _ -> raise (NotSupportedYet))
+  | ASTAssertAn ({assertName=assertionName;args=_;assertt=ASTAssert(left,bop,right);ph=proof_helper}) ->
+    fprintf fmt "Fact %s : " assertionName;
+    fprintf fmt "@[<v>, %s %s %s.@,@]" left (bopToString bop) right;
+    noVarProof fmt proof_helper bop
 
 (* blockName -> the name of the thing concerned by the proofs (functions etc) *)
-let properties_block_handle (pb : properties_block) : string = match pb with
+let properties_block_handle (fmt : formatter) (pb : properties_block) : unit = match pb with
   | ASTPropsBlock (blockName,assertions_annoted) ->
-    let headerBlock = turnToComment ("Proofs for "^blockName) in
-    let proofs_block = List.map assertion_annoted_handle assertions_annoted in
-    String.concat "\n" (headerBlock :: proofs_block)
+    fprintf fmt "@[<v 0>(* Proofs for %s *)@,@]" blockName;
+    pp_print_list assertion_annoted_handle fmt assertions_annoted
 
-let program_handle (p : program) : string = match p with
+let program_handle (fmt : formatter) (b : program ): unit = match b with
   | ASTProg (properties_blocks) ->
-    let header = turnToComment "----PROOFS----" in
-    let proofs_blocks = List.map properties_block_handle properties_blocks in
-    String.concat "" (header :: proofs_blocks)
+    fprintf fmt "@[<v 0>(* ----PROOFS---- *)@,@]";
+    pp_print_list properties_block_handle fmt properties_blocks
 
-let compile (lexbuf : Lexing.lexbuf) : string =
-  lexbuf |> parse |> program_handle
+(* all this process is parametrize by the formatter, very elegant*)
+let compile (fmt : formatter ) (lexbuf : Lexing.lexbuf) : unit =
+  lexbuf |> parse |> program_handle fmt

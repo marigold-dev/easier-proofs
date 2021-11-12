@@ -14,10 +14,11 @@ In "examples" dir we have an ocaml file, a coq file (generated with coq-of-ocaml
 run "./run_examples.sh" will run the proof generator on the files contained in the "props" dir and generate a coq file with the proof(s) generated.
 
 ## TODO/REPORT
-1. Fow now, left and right part of the assertion are string, change that and refine.
+1. Fow now, left and right part of the assertion are string, maybe change that and refine.
 2. For now, we specify the number of case at hand for "case" kind of proof. Maybe analyse myself the sum types ?
 4. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
-5. ugly code actually.
+5. ugly code actually. (make a DSL with combinators instead of ocamllex/menhir)
+6. improve the formatting (indent level for cases sub proofs)
 
 ## Kind of proofs possible
 1. [DONE?] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).

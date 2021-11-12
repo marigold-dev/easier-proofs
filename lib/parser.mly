@@ -44,7 +44,7 @@ assertions:
     | assertion_annoted {[$1]}
     | assertion_annoted; SEMICOLON; assertions {$1 :: $3}
     ;
-assertion_annoted: id = ID; ag = option(args); COLON; ass = assertion; MINUS; ph = proof_helper { ASTAssertAn (id,ag,ass,ph) };
+assertion_annoted: id = ID; ag = option(args); COLON; ass = assertion; MINUS; ph = proof_helper { ASTAssertAn ({assertName=id;args=ag;assertt=ass;ph=ph}) };
 arg: LPAREN; name = ID; COLON; typ = ID; RPAREN {ASTArg (name,typ)};
 args: arg {[$1]}
     | arg COMMA args {$1 :: $3}
