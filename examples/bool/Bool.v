@@ -1,5 +1,6 @@
 Require Import CoqOfOCaml.CoqOfOCaml.
 Require Import CoqOfOCaml.Settings.
+From Test Require Import CpdtTactics.
 
 Inductive boolean : Set :=
 | Vrai : boolean
@@ -23,19 +24,18 @@ Definition orb (b1 : boolean) (b2 : boolean) : boolean :=
   | _ => b2
   end.
 
-Fact andb_true : forall (b:boolean), (andb Vrai b) = b.
-  intro.
-  simpl.
-  reflexivity.
-  Qed.
+Fact andb_true1 : forall (b:boolean), (andb Vrai b) = b.
+  crush.
+Qed.
 
 Fact andb_true2 : forall (b:boolean), (andb b Vrai) = b.
-  intro.
-  case b.
-  - simpl.
-  reflexivity.
-  - simpl.
-  reflexivity.
+  destruct b.
+  crush.
+  crush.
+  Qed.
+
+Fact test_discriminate : 42 <> 41.
+  crush.
   Qed.
 
 Fact andb_true3 : forall (b:boolean), (andb b b) = b.
