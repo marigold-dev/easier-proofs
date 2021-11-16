@@ -1,41 +1,53 @@
-open Dslprop
+open Dslprop.DslProp
+open Dslprop.GenerateProofs
+open Format
 
-let andbtrue_straight_expected = "(* ----PROOFS---- *)\n(* Proofs for andb *)\n\nFact andbTrue1 : forall  (b:boolean) ,andb Vrai b=b.\nauto.\nQed.\n"
-let inequal_nat_straight_expected = "(* ----PROOFS---- *)\n(* Proofs for diff *)\n\nFact diff : 42<>41.\ndiscriminate.\nQed.\n"
+let andbtrue_1_2_expected = fprintf std_formatter
+  "From Test Require Import CpdtTactics.
+  (* ----PROOFS---- *)
+  (* Proofs for my_and *)
+  Fact andb_true1 : forall  (b:boolean) , andb Vrai b = b.
+  crush.
+  Qed.
+  Fact andb_true2 : forall  (b:boolean) , andb b Vrai = b.
+  destruct b
+  crush.
+  crush.
+  Qed."
+let nat_discriminate_straight_expected = fprintf std_formatter
+  "From Test Require Import CpdtTactics.
+  (* ----PROOFS---- *)
+  (* Proofs for nat *)
+  Fact diff42_41 :  42 <> 41.
+  crush.
+  Qed."
 
-let andbtrue_case_expected = "(* ----PROOFS---- *)\n(* Proofs for andb *)\n\nFact andbTrue2 : forall  (b:boolean) ,andb b Vrai=b.\ndestruct b.\n-auto.\n-auto.\nQed.\n"
+let andtrue_1_2 =
+  toProofs [
+    block "my_and" [
+      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ("andb Vrai b" =.= "b") Straight;
+      prop_case "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ("andb b Vrai" =.= "b") (case 2);
+    ]
+  ]
 
-let andtrue_straight = "property of andb { andbTrue1 (b:boolean) : \"andb Vrai b\" = \"b\" - straight }"
-let inequal_nat_straight = "property of diff { diff : \"42\" <> \"41\" - straight }"
+let nat_discriminate_straight =
+  toProofs [
+    block "nat" [
+      prop_case "diff42_41" ("42" =!= "41") Straight
+    ]
+  ]
 
-let andbtrue_case = "properties of andb { andbTrue2 (b:boolean) : \"andb b Vrai\" = \"b\" - case 2 }"
-
-(**
-I can't test those now as the generation doesn't work yet.
-
-let proof_andbtrue_case = ""
-let proof_inequal_case = ""
-
-**)
-
-let test_andbtrue_straight () = Alcotest.(check string) "have to match" andbtrue_straight_expected (GenerateProofs.compile (Lexing.from_string andtrue_straight))
-let test_inequal_nat_straight () = Alcotest.(check string) "have to match" inequal_nat_straight_expected (GenerateProofs.compile (Lexing.from_string inequal_nat_straight))
-
-let test_andbtrue_case () = Alcotest.(check string) "have to match" andbtrue_case_expected (GenerateProofs.compile (Lexing.from_string andbtrue_case))
+let test_andbtrue_straight () = Alcotest.(check unit) "have to match" andbtrue_1_2_expected (GenProof.compile std_formatter andtrue_1_2)
+let test_inequal_nat_straight () = Alcotest.(check unit) "have to match" nat_discriminate_straight_expected (GenProof.compile std_formatter nat_discriminate_straight)
 
 let () =
   let open Alcotest in
   run "DSL for express assertions and generate proofs on them"
   [
-    ("Testing suite for 'atomic' proofs ",
+    ("Testing suite for andb function ",
       [
-        test_case "Simple auto proof of an equality for the & function" `Quick test_andbtrue_straight;
-        test_case "Simple auto proof of an inequality" `Quick test_inequal_nat_straight;
+        test_case "Simple straight and case proof on andb" `Quick test_andbtrue_straight;
+        test_case "Simple auto proof of an natinequality" `Quick test_inequal_nat_straight;
       ]
-    );
-    ("Testing suite for simples case proofs",
-      [
-        test_case "Simple case proof of an equality for the & function" `Quick test_andbtrue_case
-      ]
-    );
+    )
   ]

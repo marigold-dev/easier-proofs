@@ -28,7 +28,7 @@ module GenProof = struct
   let oneVarProof (fmt : formatter ) (h : helper) (b : bop) (arg : arg)  : unit = match h with
     | Straight -> straightTactics fmt; fprintf fmt "@[Qed.@]"
     | Case n -> match arg with
-                | ASTArg (name,_) -> fprintf fmt "@[destruct %s@]" name;case_handle fmt n b; fprintf fmt "@[Qed.@]"
+                | ASTArg (name,_) -> fprintf fmt "@[destruct %s@]@." name;case_handle fmt n b; fprintf fmt "@[Qed.@]"
   (*
     proof_helper -> the annotation which help the generator to find 
     the proper proof style for the assertion
