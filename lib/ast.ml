@@ -1,16 +1,25 @@
+type quant = Forall
 type bop =
-  | Equal
-  | Diff
+  | Equality
+  | Inequality
 
+type assertion = ASTAssert of bop * string * string
+type helper = Straight | Case of int
 type arg = ASTArg of string * string
-type proofs_helper = Straight | Case of int
-type assertion = ASTAssert of string * bop * string
-type assertion_aux = {
+
+type prop_aux = {
   assertName : string;
+  qtf : quant option;
   args : arg list option;
   assertt : assertion;
-  ph : proofs_helper
+  h : helper
 }
-type assertion_annoted = ASTAssertAn of assertion_aux
-type properties_block = ASTPropsBlock of string * assertion_annoted list
-type program = ASTProg of properties_block list
+
+type prop =
+  ASTProp of prop_aux
+
+type block =
+  ASTBlock of string * prop list
+
+type blocks =
+  ASTBlocks of block list
