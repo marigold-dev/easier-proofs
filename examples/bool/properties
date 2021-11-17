@@ -1,0 +1,6 @@
+andb:
+    forall b:boolean -> andb Vrai b = b
+    forall b:boolean -> andb b Vrai = b
+orb:
+    forall b:boolean -> orb Vrai b = Vrai
+    forall b:boolean -> orb b Vrai = Vrai 

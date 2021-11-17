@@ -1,0 +1,4 @@
+add:
+    forall m:nat -> add Zero m = m
+    forall n:nat -> add n Zero = n.
+    forall m n:nat -> add m (S n) = S (add m n)

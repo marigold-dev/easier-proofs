@@ -2,6 +2,9 @@ open Ast
 
 let forall = Some(Forall)
 let case n = Case n
+let induction = Induction
+let straight = Straight
+
 let prop_case name ?(quantif=None) ?(args=None) assertt helper =
   ASTProp ({
     assertName = name;

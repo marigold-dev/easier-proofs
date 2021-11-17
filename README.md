@@ -17,11 +17,12 @@ run "./run_examples.sh" will run the proof generator on the files contained in t
 1. Fow now, left and right part of the assertion are string, maybe change that and refine.
 2. For now, we specify the number of case at hand for "case" kind of proof. Maybe analyse myself the sum types ?
 4. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
-5. ugly code actually. (make a DSL with combinators instead of ocamllex/menhir)
+5. improve existing kind of proof handled with multiple variables.
 6. improve the formatting (indent level for cases sub proofs)
 
 ## Kind of proofs possible
 1. [DONE?] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
-2. [DONE?] "case" simple proofs for equality and inequality assertions (solvable with as many auto/discriminate as cases).
+2. [DONE?] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
+3. [WIP] induction simple proofs (one variable).
 
 ("?" meaning i think its done but but I didn't have my code reviewed so i don't really know if its done.)

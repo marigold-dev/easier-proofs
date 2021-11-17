@@ -4,7 +4,10 @@ type bop =
   | Inequality
 
 type assertion = ASTAssert of bop * string * string
-type helper = Straight | Case of int
+type helper = 
+  | Straight 
+  | Case of int 
+  | Induction
 type arg = ASTArg of string * string
 
 type prop_aux = {

@@ -1,2 +1,0 @@
-(* Proofs for andb *)\nFact andbTrue1: forall (b:boolean) , andb Vrai b = b.\nauto.\nQed.
-(* Proofs for diff *)\nFact diff : 42 <> 41.\ndiscriminate.\nQed.
