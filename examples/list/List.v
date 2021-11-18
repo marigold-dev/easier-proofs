@@ -23,3 +23,17 @@ Fixpoint append {a : Set} (l : myList a) (d : myList a) : myList a :=
   | Nil => d
   | Cons el tl => Cons el (append tl d)
   end.
+
+(* ----PROOFS---- *)
+(* Proofs for append *)
+Fact append_neutral_left : forall  (a:Set) 
+  (xs:myList a) , append Nil xs = xs.
+crush.
+Qed.
+
+Fact append_neutral_right : forall  (a:Set) 
+  (xs:myList a) , append xs Nil = xs.
+induction xs.
+crush.
+crush.
+Qed.

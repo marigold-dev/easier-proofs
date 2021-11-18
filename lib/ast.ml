@@ -6,8 +6,8 @@ type bop =
 type assertion = ASTAssert of bop * string * string
 type helper = 
   | Straight 
-  | Case of int 
-  | Induction
+  | Case of int * string option (** si y'a plusieurs variables on précise sur laquelle on va case **)
+  | Induction of string
 type arg = ASTArg of string * string
 
 type prop_aux = {

@@ -54,7 +54,7 @@ let nat_add_properties =
   toProofs [
     block "add" [
       prop_case "add_0" ~quantif:forall ~args:(args_ [("m","nat")]) ("add Zero m" =.= "m") straight;
-      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") induction;
+      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") (induction "n");
     ]
   ]
 let test_bool_and () = Alcotest.(check unit) "have to match" bool_and_expected (GenProof.compile std_formatter bool_and_properties)

@@ -10,6 +10,10 @@ module GenProof = struct
 
   let straightTactic (fmt : formatter) : unit = fprintf fmt "@[<v 0>crush.@,@]"
 
+  let destruct (fmt : formatter) (var : string): unit = fprintf fmt "@[destruct %s@]@." var
+  let induction (fmt : formatter) (var : string) : unit = fprintf fmt "@[induction %s.@]@." var
+  let endOfproof (fmt : formatter) : unit = fprintf fmt "@[Qed.@]"
+
   let arg_handle (fmt : formatter) (a : arg) : unit = match a with
     | ASTArg (id,typ) -> fprintf fmt " (%s:%s) " id typ
 
@@ -29,17 +33,24 @@ module GenProof = struct
 
   (* Simple proofs with one variable *)
   let oneVarProof (fmt : formatter ) (h : helper) (arg : arg)  : unit = match h with
-    | Straight -> straightTactic fmt; fprintf fmt "@[Qed.@]"
-    | Case n -> (match arg with
-                | ASTArg (name,_) -> fprintf fmt "@[destruct %s@]@." name;case_handle fmt n; fprintf fmt "@[Qed.@]")
-    | Induction -> (match arg with
-                | ASTArg (name,_) -> fprintf fmt "@[induction %s.@]@." name;induction_handle fmt; fprintf fmt "@[Qed.@]")
+    | Straight -> straightTactic fmt; endOfproof fmt
+    | Case (n,_) -> (match arg with
+                | ASTArg (name,_) -> destruct fmt name;case_handle fmt n; endOfproof fmt)
+    | Induction _ -> (match arg with
+                | ASTArg (name,_) -> induction fmt name;induction_handle fmt; endOfproof fmt)
   (*
     proof_helper -> the annotation which help the generator to find 
     the proper proof style for the assertion
 
     for now I can generate proof with 0 or 1 variable.
   *)
+
+  let multipleVarProof (fmt : formatter) (h : helper) = match h with
+    | Straight -> straightTactic fmt; endOfproof fmt
+    | Case (n,Some(target)) -> destruct fmt target; case_handle fmt n; endOfproof fmt
+    | Induction target -> induction fmt target; induction_handle fmt; endOfproof fmt
+    | _ -> raise NotSupportedYet
+
   let property_handle (fmt : formatter) (aa : prop) : unit = match aa with
     | ASTProp ({assertName=assertionName;qtf=Some(Forall);args=Some(args);assertt=ASTAssert(bop,left,right);h=proof_helper}) ->
       fprintf fmt "Fact %s : forall " assertionName;
@@ -47,7 +58,7 @@ module GenProof = struct
       fprintf fmt "@[<v 1>, %s %s %s.@]@." left (bopToString bop) right;
       (match args with
         | [var] -> oneVarProof fmt proof_helper var
-        | _ -> raise (NotSupportedYet))
+        | _ -> multipleVarProof fmt proof_helper )
     | ASTProp ({assertName=assertionName;qtf=_;args=None;assertt=ASTAssert(bop,left,right);h=proof_helper}) ->
       fprintf fmt "Fact %s : " assertionName;
       fprintf fmt "@[<v 1> %s %s %s.@]@." left (bopToString bop) right;

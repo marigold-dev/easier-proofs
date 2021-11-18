@@ -1,8 +1,8 @@
 open Ast
 
 let forall = Some(Forall)
-let case n = Case n
-let induction = Induction
+let case ?(target=None) n = Case (n,target)
+let induction target = Induction target
 let straight = Straight
 
 let prop_case name ?(quantif=None) ?(args=None) assertt helper =

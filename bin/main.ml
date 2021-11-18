@@ -23,15 +23,15 @@ let my_nat_properties =
   toProofs [
     block "add" [
       prop_case "add_0" ~quantif:forall ~args:(args_ [("m","nat")]) ("add Zero m" =.= "m") straight;
-      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") induction;
+      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") (induction "n");
     ]
   ]
 
 let my_list_properties = 
   toProofs [
     block "append" [
-      prop_case "append_neutral_left" ~quantif:forall ~args:(args_ [("xs","myList a")]) ("append Nil xs" =.= "xs") straight;
-      prop_case "append_neutral_right" ~quantif:forall ~args:(args_ [("xs","myList a")]) ("append xs Nil" =.= "xs") induction;
+      prop_case "append_neutral_left" ~quantif:forall ~args:(args_ [("a","Set");("xs","myList a")]) ("append Nil xs" =.= "xs") straight;
+      prop_case "append_neutral_right" ~quantif:forall ~args:(args_ [("a","Set");("xs","myList a")]) ("append xs Nil" =.= "xs") (induction "xs");
     ]
   ]
   
