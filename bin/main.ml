@@ -26,13 +26,21 @@ let my_nat_properties =
       prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") induction;
     ]
   ]
+
+let my_list_properties = 
+  toProofs [
+    block "append" [
+      prop_case "append_neutral_left" ~quantif:forall ~args:(args_ [("xs","myList a")]) ("append Nil xs" =.= "xs") straight;
+      prop_case "append_neutral_right" ~quantif:forall ~args:(args_ [("xs","myList a")]) ("append xs Nil" =.= "xs") induction;
+    ]
+  ]
   
 
 let () = 
   if Array.length Sys.argv = 2 then
     let oc = open_out Sys.argv.(1) in
     let oc_formatter = formatter_of_out_channel oc in
-    GenProof.compile oc_formatter my_nat_properties;
+    GenProof.compile oc_formatter my_list_properties;
     pp_print_flush oc_formatter ()
   else
     fprintf err_formatter "target file name missing"

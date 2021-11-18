@@ -1,0 +1,4 @@
+append:
+    forall (A:Set) (xs:myList A) -> app nil xs = xs.
+    forall (A:Set) (xs:myList A) -> app xs nil = xs.
+    forall (A:Set) (xs ys:myList A) -> length (app xs ys) = length xs + length ys

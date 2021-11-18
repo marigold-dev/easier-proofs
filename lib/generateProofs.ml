@@ -33,7 +33,7 @@ module GenProof = struct
     | Case n -> (match arg with
                 | ASTArg (name,_) -> fprintf fmt "@[destruct %s@]@." name;case_handle fmt n; fprintf fmt "@[Qed.@]")
     | Induction -> (match arg with
-                | ASTArg (name,_) -> fprintf fmt "@[induction %s@]@." name;induction_handle fmt; fprintf fmt "@[Qed.@]")
+                | ASTArg (name,_) -> fprintf fmt "@[induction %s.@]@." name;induction_handle fmt; fprintf fmt "@[Qed.@]")
   (*
     proof_helper -> the annotation which help the generator to find 
     the proper proof style for the assertion
