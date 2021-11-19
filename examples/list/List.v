@@ -37,3 +37,11 @@ induction xs.
 crush.
 crush.
 Qed.
+
+Fact and_left : forall (a:Set) (xs:myList a), append Nil xs = xs /\ append xs Nil = xs.
+  crush.
+  crush.
+  induction xs.
+  crush.
+  crush.
+Qed.

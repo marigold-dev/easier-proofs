@@ -23,6 +23,8 @@ run "./run_examples.sh" will run the proof generator on the files contained in t
 ## Kind of proofs possible
 1. [DONE?] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
 2. [DONE?] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
-3. [WIP] induction simple proofs (one variable).
+3. [DONE] induction simple proofs (one variable).
+4. [DONE] multiple variables for simple straight/case/induction proofs added.
+5 [WIP] more complexe assertion with conjonction/disjonction.
 
 ("?" meaning i think its done but but I didn't have my code reviewed so i don't really know if its done.)
