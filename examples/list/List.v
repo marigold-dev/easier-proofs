@@ -38,7 +38,7 @@ crush.
 crush.
 Qed.
 
-Fact and_left : forall (a:Set) (xs:myList a), append Nil xs = xs /\ append xs Nil = xs.
+Fact and_left : False.
   crush.
   crush.
   induction xs.

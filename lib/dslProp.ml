@@ -5,6 +5,8 @@ let case ?(target=None) n = Case (n,target)
 let induction target = Induction target
 let straight = Straight
 
+let atom str = ASTAtom str
+
 let prop_case name ?(quantif=None) ?(args=None) assertt helper =
   ASTProp ({
     assertName = name;
@@ -21,3 +23,6 @@ let block name asserts = ASTBlock (name,asserts)
 
 let (=.=) l r = ASTAssert (Equality,l,r)
 let (=!=) l r = ASTAssert (Inequality,l,r)
+
+let (&^) l r = ASTAssert (Conjonction,l,r)
+let (|^) l r = ASTAssert (Disjonction,l,r)

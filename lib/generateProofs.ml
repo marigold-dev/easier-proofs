@@ -7,6 +7,8 @@ module GenProof = struct
   let bopToString (b : bop) : string = match b with
   | Equality -> "="
   | Inequality -> "<>"
+  | Conjonction -> "/\\"
+  | Disjonction -> "\\/"
 
   let straightTactic (fmt : formatter) : unit = fprintf fmt "@[<v 0>crush.@,@]"
 
@@ -23,7 +25,6 @@ module GenProof = struct
       | v -> straightTactic fmt; case_aux (v-1)
     in case_aux n
 
-
   let induction_handle (fmt : formatter) : unit = straightTactic fmt;straightTactic fmt
 
   (* The most "atomic" proofs without variables *)
@@ -33,11 +34,11 @@ module GenProof = struct
 
   (* Simple proofs with one variable *)
   let oneVarProof (fmt : formatter ) (h : helper) (arg : arg)  : unit = match h with
-    | Straight -> straightTactic fmt; endOfproof fmt
+    | Straight -> straightTactic fmt
     | Case (n,_) -> (match arg with
-                | ASTArg (name,_) -> destruct fmt name;case_handle fmt n; endOfproof fmt)
+                | ASTArg (name,_) -> destruct fmt name;case_handle fmt n)
     | Induction _ -> (match arg with
-                | ASTArg (name,_) -> induction fmt name;induction_handle fmt; endOfproof fmt)
+                | ASTArg (name,_) -> induction fmt name;induction_handle fmt)
   (*
     proof_helper -> the annotation which help the generator to find 
     the proper proof style for the assertion
@@ -46,9 +47,9 @@ module GenProof = struct
   *)
 
   let multipleVarProof (fmt : formatter) (h : helper) = match h with
-    | Straight -> straightTactic fmt; endOfproof fmt
-    | Case (n,Some(target)) -> destruct fmt target; case_handle fmt n; endOfproof fmt
-    | Induction target -> induction fmt target; induction_handle fmt; endOfproof fmt
+    | Straight -> straightTactic fmt
+    | Case (n,Some(target)) -> destruct fmt target; case_handle fmt n
+    | Induction target -> induction fmt target; induction_handle fmt
     | _ -> raise NotSupportedYet
 
   let property_handle (fmt : formatter) (aa : prop) : unit = match aa with
@@ -75,7 +76,7 @@ module GenProof = struct
     | ASTBlocks (properties_blocks) ->
       fprintf fmt "@[<v 0>From Test Require Import CpdtTactics.@,@]";
       fprintf fmt "@[<v 0>(* ----PROOFS---- *)@,@]";
-      pp_print_list block_handle fmt properties_blocks
+      pp_print_list block_handle fmt properties_blocks; endOfproof fmt
 
   (* all this process is parametrize by the formatter, very elegant*)
   let compile (fmt : formatter ) (program : blocks) : unit =
