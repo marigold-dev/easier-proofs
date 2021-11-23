@@ -54,7 +54,7 @@ toProofs [
     ]
   ]
 ```
-express those assertions : $\forall b:boolean, andb b Vrai = b$ and $\forall b:boolean, and Vrai b= b$
+express those assertions : $\forall b:boolean, andb$ $b$ $Vrai = b$ and $\forall b:boolean, andb$ $Vrai$ $b= b$
 The hints **case 2 "b"** and **straight** help the generator to know how generate the good proof for a given assertion.
 
 This is the coq proof generated from the ocaml dsl code.
@@ -85,7 +85,7 @@ toProofs [
   ]
 ```
 
-express this assertion : $\forall b:boolean, andb b Vrai = b \wedge andb b Vrai = b$
+express this assertion : $\forall b:boolean, andb$ $b$ $Vrai = b$ $\wedge$ $andb$ $b$ $Vrai = b$
 This is the coq proof generated from the ocaml dsl code.
 
 ```coq
