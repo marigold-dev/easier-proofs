@@ -4,15 +4,15 @@ type bop =
   | Inequality
   | Conjonction
   | Disjonction
-
-type assertion = 
-  | ASTAtom of string (** i can prove just True or False in coq**)
-  | ASTAssert of bop * assertion * assertion
-
 type helper = 
   | Straight 
-  | Case of int * string option (** si y'a plusieurs variables on précise sur laquelle on va case **)
+  | Case of int * string
   | Induction of string
+  | Left | Right (**pour la disjonction**)
+type assertion = 
+  | ASTAtom of string (** i can prove just True or False in coq, straight by default**)
+  | ASTAssert of bop * assertion * assertion * helper
+
 
 type arg = ASTArg of string * string
 
@@ -21,7 +21,6 @@ type prop_aux = {
   qtf : quant option;
   args : arg list option;
   assertt : assertion;
-  h : helper
 }
 
 type prop =
