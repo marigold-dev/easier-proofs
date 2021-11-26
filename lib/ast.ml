@@ -17,7 +17,7 @@ type assertion =
 type arg = ASTArg of string * string
 
 type prop_aux = {
-  assertName : string;
+  assert_name : string;
   qtf : quant option;
   args : arg list option;
   assertt : assertion;

@@ -111,14 +111,15 @@ Qed.
 ## TODO/REPORT
 1. Fow now, left and right part of the assertion are string.
 2. For now, we specify the number of case at hand for "case" kind of proof. Maybe analyse myself the sum types ?
-4. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
-6. improve the formatting (indent level for cases sub proofs)
+3. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
+4. improve the formatting (indent level for cases sub proofs)
+5. lack of documentation
 
 ## Kind of proofs possible
 1. [DONE?] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
 2. [DONE?] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
-3. [DONE] induction simple proofs (one variable).
-4. [DONE] multiple variables for simple straight/case/induction proofs added.
-5 [WIP] more complexe assertion with conjonction/disjonction.
+3. [DONE?] induction simple proofs (one variable).
+4. [DONE?] multiple variables for simple straight/case/induction proofs added.
+5  [DONE?] more complexe assertion with conjonction/disjonction.
 
 ("?" meaning i think its done but but I didn't have my code reviewed so i don't really know if its done.)
