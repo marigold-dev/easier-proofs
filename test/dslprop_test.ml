@@ -36,31 +36,31 @@ let nat_add_expected = fprintf std_formatter
   Qed."
 
 let bool_and_properties =
-  toProofs [
-    block "my_and" [
-      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ("andb Vrai b" =.= "b") Straight;
-      prop_case "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ("andb b Vrai" =.= "b") (case 2);
+  to_proofs [
+    block "andb" [
+      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) 
+        ((((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
     ]
   ]
 
 let nat_trivial =
-  toProofs [
+  to_proofs [
     block "nat" [
-      prop_case "diff42_41" ("42" =!= "41") Straight
+      prop_case "diff42_41" ((atom "42" =!= atom "41") >> straight)
     ]
   ]
 
 let nat_add_properties =
-  toProofs [
+  to_proofs [
     block "add" [
-      prop_case "add_0" ~quantif:forall ~args:(args_ [("m","nat")]) ("add Zero m" =.= "m") straight;
-      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ("add n Zero" =.= "n") (induction "n");
+      prop_case "add_0" ~quantif:forall ~args:(args_ [("m","nat")]) ((atom "add Zero m" =.= atom "m") >> straight);
+      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> straight);
     ]
   ]
-let test_bool_and () = Alcotest.(check unit) "have to match" bool_and_expected (GenProof.compile std_formatter bool_and_properties)
-let test_nat_inequal () = Alcotest.(check unit) "have to match" nat_trivial_expected (GenProof.compile std_formatter nat_trivial)
+let test_bool_and () = Alcotest.(check unit) "have to match" bool_and_expected (generate_proof std_formatter bool_and_properties)
+let test_nat_inequal () = Alcotest.(check unit) "have to match" nat_trivial_expected (generate_proof std_formatter nat_trivial)
 
-let test_nat_add () = Alcotest.(check unit) "have to match" nat_add_expected (GenProof.compile std_formatter nat_add_properties)
+let test_nat_add () = Alcotest.(check unit) "have to match" nat_add_expected (generate_proof std_formatter nat_add_properties)
 
 let () =
   let open Alcotest in
