@@ -1,4 +1,4 @@
-# easier-proves
+# easier-proofs
 A project which aim to help engineers to make proofs easily
 
 ## HOW TO USE IT
