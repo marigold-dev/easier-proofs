@@ -7,7 +7,7 @@ let straight = Straight
 
 let atom str = ASTAtom str
 
-let prop_case name ?(quantif=None) ?(args=None) assertt =
+let prop name ?(quantif=None) ?(args=None) assertt =
   ASTProp ({
     assert_name = name;
     qtf = quantif;

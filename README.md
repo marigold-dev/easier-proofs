@@ -49,8 +49,8 @@ This piece of code
 ```ocaml
 toProofs [
     block "andb" [
-      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b");
-      prop_case "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight)
+      prop "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b");
+      prop "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight)
     ]
   ]
 ```
@@ -79,7 +79,7 @@ This piece of code
 ```ocaml
 toProofs [
     block "andb" [
-      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) 
+      prop "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) 
         ((((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
     ]
   ]
@@ -114,12 +114,13 @@ Qed.
 3. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
 4. improve the formatting (indent level for cases sub proofs)
 5. lack of documentation
+6. lack of tests
 
-## Kind of proofs possible
-1. [DONE?] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
-2. [DONE?] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
-3. [DONE?] induction simple proofs (one variable).
-4. [DONE?] multiple variables for simple straight/case/induction proofs added.
-5  [DONE?] more complexe assertion with conjonction/disjonction.
+## Kind of proofs implemented
+1. [DONE] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
+2. [DONE] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
+3. [DONE] induction simple proofs (one variable).
+4. [DONE] multiple variables for simple straight/case/induction proofs added.
+5  [DONE] more complexe assertion with conjonction/disjonction.
 
 ("?" meaning i think its done but but I didn't have my code reviewed so i don't really know if its done.)

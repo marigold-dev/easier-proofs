@@ -16,8 +16,8 @@ let split_tactic (fmt : formatter) : unit = fprintf fmt "@[split.@]@."
 let destruct_tactic (fmt : formatter) (var : string): unit = fprintf fmt "@[destruct %s.@]@." var
 let induction_tactic (fmt : formatter) (var : string) : unit = fprintf fmt "@[induction %s.@]@." var
 
-let nothing (fmt : formatter) : unit = fprintf fmt ""
-let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]"
+let nothing (fmt : formatter) : unit = fprintf fmt "@."
+let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@."
 
 let arg (fmt : formatter) (a : arg) : unit = match a with
   | ASTArg (id,typ) -> fprintf fmt " (%s:%s) " id typ
@@ -35,8 +35,8 @@ let resolve_proof_style (fmt : formatter) (b : bop) (h : helper) : unit = match 
   | (Conjonction | Disjonction),_ -> raise (IncoherentHelper "Unusable helper for conjonction/disjonction")
   | _,h' -> (match h' with
               | Straight -> straight_tactic fmt
-              | Case (n,target) -> destruct_tactic fmt target; case_tactic fmt n
-              | Induction target -> induction_tactic fmt target; straight_tactic fmt;straight_tactic fmt
+              | Case (n,target) -> destruct_tactic fmt target;case_tactic fmt n;
+              | Induction target -> induction_tactic fmt target; straight_tactic fmt;straight_tactic fmt;
               | _ -> raise (IncoherentHelper "left and right are helpers for disjonction only"))
 
 let fact_description (fmt : formatter) (a : assertion) : unit =
@@ -59,11 +59,11 @@ let in_property (fmt : formatter) (aa : prop) : unit = match aa with
     fprintf fmt "Fact %s : forall " assert_name';
     pp_print_list arg fmt args';
     fprintf fmt "@[, %a.@]@." fact_description assertt';
-    in_assertion fmt assertt'
+    in_assertion fmt assertt'; qed fmt
   | ASTProp ({assert_name=assert_name';qtf=_;args=None;assertt=assertt'}) ->
     fprintf fmt "Fact %s : " assert_name';
     fprintf fmt "@[%a.@]@." fact_description assertt';
-    in_assertion fmt assertt'
+    in_assertion fmt assertt'; qed fmt
   | _ -> raise NotSupportedYet
 
 let in_block (fmt : formatter) (pb : block) : unit = match pb with
@@ -75,7 +75,7 @@ let in_blocks (fmt : formatter) (b : blocks ): unit = match b with
   | ASTBlocks (properties_blocks) ->
     fprintf fmt "@[<v 0>From Test Require Import CpdtTactics.@,@]";
     fprintf fmt "@[<v 0>(* ----PROOFS---- *)@,@]";
-    pp_print_list in_block fmt properties_blocks; qed fmt
+    pp_print_list in_block fmt properties_blocks
 
 let generate_proof (fmt : formatter ) (program : blocks) : unit =
-  fprintf fmt "%a" in_blocks program
+  fprintf fmt "%a" in_blocks program;fprintf fmt "@[<v 0> (**END OF PROOFS**)@]@."
