@@ -54,7 +54,7 @@ toProofs [
     ]
   ]
 ```
-express those assertions : $\forall b:boolean, andb$ $b$ $Vrai = b$ and $\forall b:boolean, andb$ $Vrai$ $b= b$
+express those assertions : <img src="https://latex.codecogs.com/svg.latex?\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;b\,&space;\,&space;Vrai&space;=&space;b" title="\forall b : boolean\,, andb\,\, b\, \, Vrai = b" /> and <img src="https://latex.codecogs.com/svg.latex?\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;Vrai\,&space;\,&space;b&space;=&space;b" title="\forall b : boolean\,, andb\,\, Vrai\, \, b = b" />
 The hints **case 2 "b"** and **straight** help the generator to know how generate the good proof for a given assertion.
 
 This is the coq proof generated from the ocaml dsl code.
@@ -85,7 +85,7 @@ toProofs [
   ]
 ```
 
-express this assertion : $\forall b:boolean, andb$ $b$ $Vrai = b$ $\wedge$ $andb$ $b$ $Vrai = b$
+express this assertion : <img src="https://latex.codecogs.com/svg.latex?\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;b\,&space;\,&space;Vrai&space;=&space;b&space;\,&space;\wedge&space;andb\,\,&space;Vrai\,&space;\,&space;b&space;=&space;b" title="\forall b : boolean\,, andb\,\, b\, \, Vrai = b \, \wedge andb\,\, Vrai\, \, b = b" />
 This is the coq proof generated from the ocaml dsl code.
 
 ```coq
