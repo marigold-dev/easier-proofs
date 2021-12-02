@@ -11,13 +11,13 @@ open Stdio
   ]
 
 let my_bool_properties =
-  to_proofs [(*
+  to_proofs [
     block "andb" [
-      prop "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight);
-      prop "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b");
-    ]*)
+      prop "andb_true2" ~context:(forall [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight);
+      prop "andb_true1" ~context:(forall [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b")
+    ];
     block "andb_conj" [
-      prop "andb_true_both" ~quantif:forall ~args:(args_ [("b","boolean")])
+      prop "andb_true_both" ~context:(forall [("b","boolean")])
         (((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight))
     ]
   ]
@@ -25,16 +25,16 @@ let my_bool_properties =
 let my_nat_properties =
   to_proofs [
     block "add" [
-      prop "add_0" ~quantif:forall ~args:(args_ [("n","nat")]) ((atom "add Zero n" =.= atom "n") >> straight);
-      prop "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
+      prop "add_0" ~context:(forall [("n","nat")]) ((atom "add Zero n" =.= atom "n") >> straight);
+      prop "add_1" ~context:(forall [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
     ]
   ]
 
 let my_list_properties = 
   to_proofs [
     block "append" [
-      prop "append_neutral_left" ~quantif:forall ~args:(args_ [("a","Set");("xs","myList a")]) ((atom "append Nil xs" =.= atom "xs") >> straight);
-      prop "append_neutral_right" ~quantif:forall ~args:(args_ [("a","Set");("xs","myList a")]) ((atom "append xs Nil" =.= atom "xs") >> induction "xs");
+      prop "append_neutral_left" ~context:(forall [("a","Set");("xs","myList a")]) ((atom "append Nil xs" =.= atom "xs") >> straight);
+      prop "append_neutral_right" ~context:(forall [("a","Set");("xs","myList a")]) ((atom "append xs Nil" =.= atom "xs") >> induction "xs");
     ]
   ]
 

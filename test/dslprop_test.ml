@@ -38,7 +38,7 @@ let nat_add_expected = fprintf std_formatter
 let bool_and_properties =
   to_proofs [
     block "andb" [
-      prop_case "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) 
+      prop "andb_true1" ~context:(forall [("b","boolean")]) 
         ((((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
     ]
   ]
@@ -46,15 +46,15 @@ let bool_and_properties =
 let nat_trivial =
   to_proofs [
     block "nat" [
-      prop_case "diff42_41" ((atom "42" =!= atom "41") >> straight)
+      prop "diff42_41" ((atom "42" =!= atom "41") >> straight)
     ]
   ]
 
 let nat_add_properties =
   to_proofs [
     block "add" [
-      prop_case "add_0" ~quantif:forall ~args:(args_ [("m","nat")]) ((atom "add Zero m" =.= atom "m") >> straight);
-      prop_case "add_1" ~quantif:forall ~args:(args_ [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> straight);
+      prop "add_0" ~context:(forall [("m","nat")]) ((atom "add Zero m" =.= atom "m") >> straight);
+      prop "add_1" ~context:(forall [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
     ]
   ]
 let test_bool_and () = Alcotest.(check unit) "have to match" bool_and_expected (generate_proof std_formatter bool_and_properties)
