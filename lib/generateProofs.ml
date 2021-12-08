@@ -28,7 +28,9 @@ let case_tactic fmt =
     | v -> straight_tactic fmt; case_aux (v-1)
   in case_aux
 
-let resolve_proof_style fmt b h = match b,h with
+let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
+
+let standalone_proof fmt b h = match b,h with
   | Conjonction,Straight -> split_tactic fmt
   | Disjonction,Left -> fprintf fmt "@[left.@]@."
   | Disjonction,Right -> fprintf fmt "@[right.@]@."
@@ -37,31 +39,36 @@ let resolve_proof_style fmt b h = match b,h with
   | _, Case (n,target) -> destruct_tactic fmt target; case_tactic fmt n
   | _, Induction target -> induction_tactic fmt target; straight_tactic fmt;straight_tactic fmt
   | _ -> raise (IncoherentHelper "left and right are helpers for disjonction only")
+let with_aux_lemmas_proof fmt axioms b h = match b,h with
+  | _, Induction target -> induction_tactic fmt target; pp_print_list reduce_axiom fmt axioms
+  | _,_ -> raise NotSupportedYet
+
 let fact_description fmt =
   let rec aux fmt = function
     | ASTAtom (cnt) -> fprintf fmt "%s" cnt
     | ASTAssert (bop,left,right,_) -> fprintf fmt "@[<v 1>%a %s %a@]" aux left (string_of_bop bop) aux right
   in aux fmt
 
-let in_assertion fmt a =
+let in_assertion fmt a axioms =
+  let target = if List.length axioms = 0 then standalone_proof fmt else with_aux_lemmas_proof fmt axioms in
   let rec aux = function
     | ASTAtom (_) -> straight_tactic fmt
-    | ASTAssert(Disjonction,left,_,Left) -> resolve_proof_style fmt Disjonction Left; aux left
-    | ASTAssert(Disjonction,_,right,Right) -> resolve_proof_style fmt Disjonction Right; aux right
-    | ASTAssert (bop,ASTAtom(_),ASTAtom(_),helper) -> resolve_proof_style fmt bop helper
-    | ASTAssert (bop,left,right,helper) -> resolve_proof_style fmt bop helper; aux left;aux right
+    | ASTAssert(Disjonction,left,_,Left) -> target Disjonction Left; aux left
+    | ASTAssert(Disjonction,_,right,Right) -> target Disjonction Right; aux right
+    | ASTAssert (bop,ASTAtom(_),ASTAtom(_),helper) -> target bop helper
+    | ASTAssert (bop,left,right,helper) -> target bop helper; aux left;aux right
   in aux a
 
 let in_property fmt = function
-  | ASTProp ({assert_name=assert_name';qtf=Some(Forall);args=Some(args');assertt=assertt';_}) ->
+  | ASTProp ({assert_name=assert_name';qtf=Some(Forall);args=Some(args');assertt=assertt';lemmas_aux=axioms}) ->
     fprintf fmt "Fact %s : forall " assert_name';
     pp_print_list arg fmt args';
     fprintf fmt "@[, %a.@]@." fact_description assertt';
-    in_assertion fmt assertt'; qed fmt
-  | ASTProp ({assert_name=assert_name';qtf=_;args=None;assertt=assertt';_}) ->
+    in_assertion fmt assertt' axioms; qed fmt
+  | ASTProp ({assert_name=assert_name';qtf=_;args=None;assertt=assertt';lemmas_aux=axioms}) ->
     fprintf fmt "Fact %s : " assert_name';
     fprintf fmt "@[%a.@]@." fact_description assertt';
-    in_assertion fmt assertt'; qed fmt
+    in_assertion fmt assertt' axioms; qed fmt
   | _ -> raise NotSupportedYet
 
 let in_block fmt = function
