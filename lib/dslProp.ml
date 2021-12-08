@@ -9,12 +9,13 @@ let straight = Straight
 
 let atom str = ASTAtom str
 
-let prop name ?(context=(None,None)) assertt =
+let prop name ?(context=(None,None)) ?(axioms=[]) assertt =
   ASTProp ({
     assert_name = name;
     qtf = fst context;
     args = snd context;
     assertt = assertt;
+    lemmas_aux = axioms;
     }
   )
 let to_proofs blocks = ASTBlocks blocks
@@ -26,4 +27,4 @@ let (=!=) l r = fun h -> ASTAssert (Inequality,l,r,h)
 let (&^) l r = ASTAssert (Conjonction,l,r,Straight)
 let (|^) l r = fun h -> ASTAssert (Disjonction,l,r,h)
 
-let (>>) (l : helper -> assertion) h = l h
+let (>>) l h = l h

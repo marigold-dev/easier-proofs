@@ -14,7 +14,11 @@ let my_bool_properties =
   to_proofs [
     block "andb" [
       prop "andb_true2" ~context:(forall [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight);
-      prop "andb_true1" ~context:(forall [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b")
+      prop "andb_true1" ~context:(forall [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b");
+      prop "andb_true3"
+        ~context:(forall [("b","boolean")])
+        ((atom "andb b Vrai" =.= atom "b") >> case 2 "b")
+        ~axioms:["andb_true1";"andb_true2"]
     ];
     block "andb_conj" [
       prop "andb_true_both" ~context:(forall [("b","boolean")])

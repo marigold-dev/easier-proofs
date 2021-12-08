@@ -53,12 +53,12 @@ let in_assertion fmt a =
   in aux a
 
 let in_property fmt = function
-  | ASTProp ({assert_name=assert_name';qtf=Some(Forall);args=Some(args');assertt=assertt'}) ->
+  | ASTProp ({assert_name=assert_name';qtf=Some(Forall);args=Some(args');assertt=assertt';_}) ->
     fprintf fmt "Fact %s : forall " assert_name';
     pp_print_list arg fmt args';
     fprintf fmt "@[, %a.@]@." fact_description assertt';
     in_assertion fmt assertt'; qed fmt
-  | ASTProp ({assert_name=assert_name';qtf=_;args=None;assertt=assertt'}) ->
+  | ASTProp ({assert_name=assert_name';qtf=_;args=None;assertt=assertt';_}) ->
     fprintf fmt "Fact %s : " assert_name';
     fprintf fmt "@[%a.@]@." fact_description assertt';
     in_assertion fmt assertt'; qed fmt
