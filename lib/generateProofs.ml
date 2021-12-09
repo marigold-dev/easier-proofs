@@ -30,6 +30,9 @@ let case_tactic fmt =
 
 let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
 
+(** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
+    which dont need auxiliar lemmas to be written, takes a binary operator and a proof helper to determine
+    how print the right coq code.**)
 let standalone_proof fmt b h = match b,h with
   | Conjonction,Straight -> split_tactic fmt
   | Disjonction,Left -> fprintf fmt "@[left.@]@."
@@ -39,16 +42,23 @@ let standalone_proof fmt b h = match b,h with
   | _, Case (n,target) -> destruct_tactic fmt target; case_tactic fmt n
   | _, Induction target -> induction_tactic fmt target; straight_tactic fmt;straight_tactic fmt
   | _ -> raise (IncoherentHelper "left and right are helpers for disjonction only")
+
+(** [with_aux_lemmas_proof fmt lemmas binOp helper] handle the proofs 
+    which need auxiliar lemmas to be written, takes a list of lemmas (axioms), a binary operator and a proof helper to determine
+    how print the right coq code.**)
 let with_aux_lemmas_proof fmt axioms b h = match b,h with
   | _, Induction target -> induction_tactic fmt target; pp_print_list reduce_axiom fmt axioms
   | _,_ -> raise NotSupportedYet
 
+(** [fact_description fmt prop_body] print the body of a "Fact" coq construction with datas contains in a assertion AST.**)
 let fact_description fmt =
   let rec aux fmt = function
     | ASTAtom (cnt) -> fprintf fmt "%s" cnt
     | ASTAssert (bop,left,right,_) -> fprintf fmt "@[<v 1>%a %s %a@]" aux left (string_of_bop bop) aux right
   in aux fmt
 
+(** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate, from if we need auxiliars lemmas
+    or not .**)
 let in_assertion fmt a axioms =
   let target = if List.length axioms = 0 then standalone_proof fmt else with_aux_lemmas_proof fmt axioms in
   let rec aux = function
@@ -59,6 +69,8 @@ let in_assertion fmt a axioms =
     | ASTAssert (bop,left,right,helper) -> target bop helper; aux left;aux right
   in aux a
 
+
+(** [in_property fmt prop] is the function that show the pipeline of an entire property translation**)
 let in_property fmt = function
   | ASTProp ({assert_name=assert_name';qtf=Some(Forall);args=Some(args');assertt=assertt';lemmas_aux=axioms}) ->
     fprintf fmt "Fact %s : forall " assert_name';
