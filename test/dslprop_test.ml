@@ -30,7 +30,7 @@ let nat_add_expected = fprintf std_formatter
   crush.
   Qed.
   Fact add_1 : forall  (n:nat) , add n Zero = n.
-  induction n
+  induction n.
   crush.
   crush.
   Qed."
@@ -39,7 +39,7 @@ let bool_and_properties =
   to_proofs [
     block "andb" [
       prop "andb_true1" ~context:(forall [("b","boolean")]) 
-        ((((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
+        ((((atom "andb b Vrai" =.= atom "b") >> case "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
     ]
   ]
 

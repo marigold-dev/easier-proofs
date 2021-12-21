@@ -13,8 +13,8 @@ let straight_tactic (fmt : formatter) : unit = fprintf fmt "@[<v 0>crush.@,@]"
 
 let split_tactic (fmt : formatter) : unit = fprintf fmt "@[split.@]@."
 
-let destruct_tactic (fmt : formatter) (var : string): unit = fprintf fmt "@[destruct %s.@]@." var
-let induction_tactic (fmt : formatter) (var : string) : unit = fprintf fmt "@[induction %s.@]@." var
+let destruct_tactic (fmt : formatter) (var : string): unit = fprintf fmt "@[destruct %s.@]" var
+let induction_tactic (fmt : formatter) (var : string) : unit = fprintf fmt "@[induction %s.@]" var
 
 let nothing (fmt : formatter) : unit = fprintf fmt "@."
 let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@."
@@ -22,12 +22,7 @@ let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@."
 let arg fmt = function
   | ASTArg (id,typ) -> fprintf fmt " (%s:%s) " id typ
 
-let case_tactic fmt =
-  let rec case_aux = function
-    | 0 -> ()
-    | v -> straight_tactic fmt; case_aux (v-1)
-  in case_aux
-
+let semicolon fmt = fprintf fmt ";"
 let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
 
 (** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
@@ -39,8 +34,8 @@ let standalone_proof fmt b h = match b,h with
   | Disjonction,Right -> fprintf fmt "@[right.@]@."
   | (Conjonction | Disjonction),_ -> raise (IncoherentHelper "Unusable helper for conjonction/disjonction")
   | _, Straight -> straight_tactic fmt
-  | _, Case (n,target) -> destruct_tactic fmt target; case_tactic fmt n
-  | _, Induction target -> induction_tactic fmt target; straight_tactic fmt;straight_tactic fmt
+  | _, Case target -> destruct_tactic fmt target; semicolon fmt; straight_tactic fmt
+  | _, Induction target -> induction_tactic fmt target; semicolon fmt; straight_tactic fmt
   | _ -> raise (IncoherentHelper "left and right are helpers for disjonction only")
 
 (** [with_aux_lemmas_proof fmt lemmas binOp helper] handle the proofs 

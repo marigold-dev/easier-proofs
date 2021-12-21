@@ -7,7 +7,7 @@ type bop =
 
 type helper = 
   | Straight 
-  | Case of int * string
+  | Case of string
   | Induction of string
   | Left | Right
 

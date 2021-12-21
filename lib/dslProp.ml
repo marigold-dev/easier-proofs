@@ -3,7 +3,7 @@ open Ast
 
 let args_ l = Some (List.map (fun arg -> ASTArg(fst arg,snd arg)) l)
 let forall args = (Some(Forall),args_ args)
-let case n target = Case (n,target)
+let case target = Case target
 let induction target = Induction target
 let straight = Straight
 
