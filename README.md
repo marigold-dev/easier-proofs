@@ -69,6 +69,7 @@ Fact andb_true1 : forall  (b:boolean) , andb b Vrai = b.
 destruct b.
 crush.
 crush.
+Qed.
 
 Fact andb_true2 : forall  (b:boolean) , andb Vrai b = b.
 crush.
