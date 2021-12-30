@@ -1,6 +1,6 @@
 # Properties for boolean operators
 
-## NEG
+## Negation (NEG/NOT)
 
 The boolean operator `negb` is defined in `Bool.v`:
 
@@ -14,7 +14,7 @@ Definition negb (b : boolean) : boolean :=
 
 TODO
 
-## AND 
+## Conjunction (AND) 
 
 The boolean operator `andb` is defined in `Bool.v`:
 
@@ -35,7 +35,7 @@ Lemma andb_left (b: boolean) : andb True b = b.
 Lemma andb_right (b: boolean) : andb b True = b. 
 ```
 
-## OR
+## Disjunction (OR)
 The boolean operator `orb` is defined in `Bool.v`: 
 
 ```
@@ -55,10 +55,17 @@ Lemma orb_left (b: boolean): orb True b = True.
 Lemma orb_right (b: boolean): orb b True = True.
 ```
 
-## XOR
+## Exclusive OR (XOR)
 
 TODO
 
-## IMPL
+## Material implication (if ... then)
 
 TODO
+
+## Bio-conditional (if and only if)
+
+
+<!--
+https://en.wikipedia.org/wiki/Logical_connective
+--!>
