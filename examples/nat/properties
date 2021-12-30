@@ -1,4 +1,0 @@
-add:
-    forall a:Set m:nat -> add Zero m = m
-    forall a:Set n:nat -> add n Zero = n.
-    forall a:Set m n:nat -> add m (S n) = S (add m n)
