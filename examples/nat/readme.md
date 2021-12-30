@@ -3,11 +3,9 @@
 Peano natural number is defined as 
 
 ```
-Definition pred (n : nat) : nat :=
-  match n with
-  | Zero => Zero
-  | S p => p
-  end.
+Inductive nat : Set :=
+| Zero : nat
+| S : nat -> nat.
 ```
 It has some properties:
 
