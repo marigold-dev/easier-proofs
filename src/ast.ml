@@ -35,12 +35,13 @@ type prop_body =
 
 type arg = ASTArg of string * string
 
-type prop_context =
-  { assert_name: string
-  ; qtf: quant option
-  ; args: arg list option
-  ; assertt: prop_body
-  ; lemmas_aux: string list }
+type prop_context = {
+  assert_name : string;
+  qtf : quant option;
+  args : arg list option;
+  assertt : prop_body;
+  lemmas_aux : string list;
+}
 
 type prop = ASTProp of prop_context
 

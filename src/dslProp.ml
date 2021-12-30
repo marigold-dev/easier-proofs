@@ -39,11 +39,13 @@ let atom str = ASTAtom str
 
 let prop name ?(context = (None, None)) ?(axioms = []) assertt =
   ASTProp
-    { assert_name= name
-    ; qtf= fst context
-    ; args= snd context
-    ; assertt
-    ; lemmas_aux= axioms }
+    {
+      assert_name = name;
+      qtf = fst context;
+      args = snd context;
+      assertt;
+      lemmas_aux = axioms;
+    }
 
 let to_proofs blocks = ASTBlocks blocks
 
