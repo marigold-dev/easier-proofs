@@ -16,7 +16,7 @@ Lemma one_succ: 1 = S 0.
 Lemma two_succ: 2 = S 1.
 ```
 
-## Pred
+## Predecessor
 
 The `pred` is defined as:
 ```
