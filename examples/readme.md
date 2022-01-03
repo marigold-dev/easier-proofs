@@ -9,3 +9,4 @@ Generate `Coq` file, for example for `OCaml` files inside the folder `bool`:
 To compile the `Coq` files do: `make`.
 
 To clean up using `make clean`.
+
