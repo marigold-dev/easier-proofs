@@ -1,127 +1,103 @@
 # easier-proofs
-A project which aim to help engineers to make proofs easily
+A project which aim to help engineers to make proofs easily.
 
 ## HOW TO USE IT
 
-A Simple example with a boolean custom type.
+The "crush" custom tactic of chlipala from certified programming with dependent types is widely use in this project.
+
+This is a simple example with the commutitavity of addition on natural numbers.
 
 First of all, we have this ocaml code.
 
 ```ocaml
-type boolean = 
-  | Vrai
-  | Faux
+type nat =
+  | Zero
+  | S of nat
 
-let andb (b1:boolean) (b2: boolean) : boolean = match b1 with
-  | Vrai -> b2
-  | _ -> Faux
+let pred (n : nat) : nat = match n with
+  | Zero -> Zero
+  | S p -> p
 
-let orb (b1:boolean) (b2:boolean) : boolean = match b1 with
-  | Vrai -> Vrai
-  | _ -> b2
+let rec add (n : nat) (m : nat) : nat = match n with
+  | Zero -> m
+  | S p -> S (add p m)
 ```
 
 We generate the coq code of this ocaml code with [**Coq-of-ocaml**](https://github.com/foobar-land/coq-of-ocaml).
 
 ```coq
-Require Import CoqOfOCaml.CoqOfOCaml.
-Require Import CoqOfOCaml.Settings.
+Inductive nat : Set :=
+| Zero : nat
+| S : nat -> nat.
 
-Inductive boolean : Set :=
-| Vrai : boolean
-| Faux : boolean.
-
-Definition andb (b1 : boolean) (b2 : boolean) : boolean :=
-  match b1 with
-  | Vrai => b2
-  | _ => Faux
+Definition pred (n : nat) : nat :=
+  match n with
+  | Zero => Zero
+  | S p => p
   end.
 
-Definition orb (b1 : boolean) (b2 : boolean) : boolean :=
-  match b1 with
-  | Vrai => Vrai
-  | _ => b2
+Fixpoint add (n : nat) (m : nat) : nat :=
+  match n with
+  | Zero => m
+  | S p => S (add p m)
   end.
 ```
-Now, we use the DSL for express properties we want to prove about **andb** definition.
+
+In order to prove the commutativity of the addittion, we have to prove two lemmas before that :
+  - n + 0 = n
+  - S (x + y) = x + (S y)
+
+Now, we use the DSL for express properties we want to prove.
 
 This piece of code
 ```ocaml
-toProofs [
-    block "andb" [
-      prop "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb b Vrai" =.= atom "b") >> case 2 "b");
-      prop "andb_true2" ~quantif:forall ~args:(args_ [("b","boolean")]) ((atom "andb Vrai b" =.= atom "b") >> straight)
+to_proofs [
+    block "commutativity of nat addition" [
+      prop "add_right_zero" ~context:(forall [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
+
+      prop "add_s" ~context:(forall [("x","nat");("y","nat")]) ((atom "S (add x y)" =.= atom "add x (S y)") >> induction "x");
+
+      prop "add_commut"
+        ~context:(forall [("x","nat");("y","nat")])
+        ((atom "add x y" =.= atom "add y x") >> induction "x")
+        ~axioms:["add_right_zero";"add_s"]
     ]
   ]
 ```
-express those assertions : <img src="https://latex.codecogs.com/png.latex?\inline&space;\bg_white&space;\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;b\,&space;\,&space;Vrai&space;=&space;b&space;\" title="\forall b : boolean\,, andb\,\, b\, \, Vrai = b \" /> and <img src="https://latex.codecogs.com/png.latex?\inline&space;\bg_white&space;\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;Vrai\,&space;\,&space;b&space;=&space;b&space;\" title="\forall b : boolean\,, andb\,\, Vrai\, \, b = b \" />
-The hints **case 2 "b"** and **straight** help the generator to know how generate the good proof for a given assertion.
+express those two needed lemmas and the commutativity.
 
 This is the coq proof generated from the ocaml dsl code.
 
 ```coq
 From Test Require Import CpdtTactics.
-
 (* ----PROOFS---- *)
-(* Proofs for andb *)
+(* Proofs for commutativity of nat addition *)
 
-Fact andb_true1 : forall  (b:boolean) , andb b Vrai = b.
-destruct b.
-crush.
-crush.
+Fact add_right_zero : forall  (n:nat) , add n Zero = n.
+                                        
+induction n;crush.
 Qed.
 
-Fact andb_true2 : forall  (b:boolean) , andb Vrai b = b.
-crush.
+Fact add_s : forall  (x:nat) 
+ (y:nat) , S (add x y) = add x (S y).
+           
+induction x;crush.
 Qed.
-```
 
-This piece of code
-```ocaml
-toProofs [
-    block "andb" [
-      prop "andb_true1" ~quantif:forall ~args:(args_ [("b","boolean")]) 
-        ((((atom "andb b Vrai" =.= atom "b") >> case 2 "b") &^ ((atom "andb Vrai b" =.= atom "b") >> straight)))
-    ]
-  ]
-```
+Fact add_commut : forall  (x:nat) 
+ (y:nat) , add x y = add y x.
+           
+#[local] Hint Rewrite add_right_zero.
 
-express this assertion : <img src="https://latex.codecogs.com/png.latex?\inline&space;\bg_white&space;\forall&space;b&space;:&space;boolean\,,&space;andb\,\,&space;b\,&space;\,&space;Vrai&space;=&space;b&space;\,&space;\wedge&space;andb\,\,&space;Vrai\,&space;\,&space;b&space;=&space;b" title="\forall b : boolean\,, andb\,\, b\, \, Vrai = b \, \wedge andb\,\, Vrai\, \, b = b" />
-This is the coq proof generated from the ocaml dsl code.
-
-```coq
-From Test Require Import CpdtTactics.
-
-(* ----PROOFS---- *)
-(* Proofs for andb *)
-
-Fact andb_true1 : forall  (b:boolean) , andb b Vrai = b /\ andb Vrai b = b.
-split.
-destruct b.
-crush.
-crush.
-crush.
+#[local] Hint Rewrite add_s.
+induction x;crush.
 Qed.
+ (**END OF PROOFS**)
+
 ```
+
 
 
 ## RUN TESTS
 
 "dune build" and "dune exec test/<test_you_want>.exe" or "make", the Makefile will clean, build and run the tests.
-
-## TODO/REPORT
-1. Fow now, left and right part of the assertion are string.
-2. For now, we specify the number of case at hand for "case" kind of proof. Maybe analyse myself the sum types ?
-3. Add more kind of proofs and properties to handle (Monoid, Monad, etc).
-4. improve the formatting (indent level for cases sub proofs)
-5. lack of documentation
-6. lack of tests
-
-## Kind of proofs implemented
-1. [DONE] "one shot" proofs for equality and inequality are made (solvable with auto/discriminate).
-2. [DONE] "case" simple proofs (one variable) for equality and inequality assertions (solvable with as many auto/discriminate as cases).
-3. [DONE] induction simple proofs (one variable).
-4. [DONE] multiple variables for simple straight/case/induction proofs added.
-5  [DONE] more complexe assertion with conjonction/disjonction.
-
-("?" meaning i think its done but but I didn't have my code reviewed so i don't really know if its done.)
