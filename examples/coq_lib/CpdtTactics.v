@@ -108,7 +108,7 @@
  Ltac rewriter := autorewrite with core in *; rewriterP.
  
  (** This one is just so darned useful, let's add it as a hint here. *)
-#[local] Hint Rewrite app_ass.
+#[global] Hint Rewrite app_ass.
  
  (** Devious marker predicate to use for encoding state within proof goals *)
  Definition done (T : Type) (x : T) := True.
