@@ -41,8 +41,8 @@ let prop name ?(context = (None, None)) ?(axioms = []) assertt =
   ASTProp
     {
       assert_name = name;
-      qtf = fst context;
-      args = snd context;
+      qtf_opt = fst context;
+      args_opt = snd context;
       assertt;
       lemmas_aux = axioms;
     }
@@ -55,8 +55,8 @@ let ( =.= ) l r h = ASTAssert (Equality, l, r, h)
 
 let ( =!= ) l r h = ASTAssert (Inequality, l, r, h)
 
-let ( &^ ) l r = ASTAssert (Conjonction, l, r, Straight)
+let ( &^ ) l r = ASTAssert (Conjunction, l, r, Straight)
 
-let ( |^ ) l r h = ASTAssert (Disjonction, l, r, h)
+let ( |^ ) l r h = ASTAssert (Disjunction, l, r, h)
 
 let ( >> ) l h = l h

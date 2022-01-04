@@ -33,10 +33,10 @@ let bool_and_expected =
     "From Test Require Import CpdtTactics.\n\
     \  (* ----PROOFS---- *)\n\
     \  (* Proofs for my_and *)\n\
-    \  Fact andb_true1 : forall  (b:boolean) , andb Vrai b = b.\n\
+    \  Fact andb_true1 : forall  (b:boolean) , andb True b = b.\n\
     \  crush.\n\
     \  Qed.\n\
-    \  Fact andb_true2 : forall  (b:boolean) , andb b Vrai = b.\n\
+    \  Fact andb_true2 : forall  (b:boolean) , andb b True = b.\n\
     \  destruct b\n\
     \  crush.\n\
     \  crush.\n\
@@ -76,8 +76,8 @@ let bool_and_properties =
           prop
             "andb_true1"
             ~context:(forall [("b", "boolean")])
-            (atom "andb b Vrai" =.= atom "b" >> case "b"
-            &^ (atom "andb Vrai b" =.= atom "b" >> straight));
+            (atom "andb b True" =.= atom "b" >> case "b"
+            &^ (atom "andb True b" =.= atom "b" >> straight));
         ];
     ]
 
@@ -129,11 +129,11 @@ let () =
         [
           test_case "Simple straight and case proof on andb" `Quick test_bool_and;
           test_case
-            "Simple auto proof of an nat inequality"
+            "Simple auto proof of an Nat inequality"
             `Quick
             test_nat_inequal;
           test_case
-            "Simple straight and inductive proofs for add function on nat"
+            "Simple straight and inductive proofs for add function on Nat"
             `Quick
             test_nat_add;
         ] );

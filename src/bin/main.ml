@@ -37,15 +37,15 @@ let my_bool_properties =
           prop
             "andb_true2"
             ~context:(forall [("b", "boolean")])
-            (atom "andb Vrai b" =.= atom "b" >> straight);
+            (atom "andb True b" =.= atom "b" >> straight);
           prop
             "andb_true1"
             ~context:(forall [("b", "boolean")])
-            (atom "andb b Vrai" =.= atom "b" >> case "b");
+            (atom "andb b True" =.= atom "b" >> case "b");
           prop
             "andb_true3"
             ~context:(forall [("b", "boolean")])
-            (atom "andb b Vrai" =.= atom "b" >> induction "n")
+            (atom "andb b True" =.= atom "b" >> induction "n")
             ~axioms:["andb_true1"; "andb_true2"];
         ];
     ]

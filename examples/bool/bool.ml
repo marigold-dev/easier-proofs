@@ -23,12 +23,12 @@
 (*                                                                           *)
 (*****************************************************************************)
 
-type boolean = Vrai | Faux
+type boolean = True | False
 
-let negb (b : boolean) : boolean = match b with Vrai -> Faux | Faux -> Vrai
+let negb (b : boolean) : boolean = match b with True -> False | False -> True
 
 let andb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with Vrai -> b2 | _ -> Faux
+  match b1 with True -> b2 | _ -> Faux
 
 let orb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with Vrai -> Vrai | _ -> b2
+  match b1 with True -> True | _ -> b2

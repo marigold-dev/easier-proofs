@@ -25,7 +25,7 @@
 
 type quant = Forall
 
-type bop = Equality | Inequality | Conjonction | Disjonction
+type bop = Equality | Inequality | Conjunction | Disjunction
 
 type helper = Straight | Case of string | Induction of string | Left | Right
 
@@ -37,8 +37,8 @@ type arg = ASTArg of string * string
 
 type prop_context = {
   assert_name : string;
-  qtf : quant option;
-  args : arg list option;
+  qtf_opt : quant option;
+  args_opt : arg list option;
   assertt : prop_body;
   lemmas_aux : string list;
 }
