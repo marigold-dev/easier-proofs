@@ -57,8 +57,6 @@ let arg fmt = function ASTArg (id, typ) -> fprintf fmt " (%s:%s) " id typ
 
 let semicolon fmt = fprintf fmt ";"
 
-let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
-
 let dot fmt = fprintf fmt "@[.@]@."
 
 (** only rewrite hints for now **)
@@ -91,18 +89,6 @@ let standalone_proof fmt b h =
       dot fmt
   | _ ->
       raise (Incoherent_Helper "left and right are helpers for disjunction only")
-
-(** [with_aux_lemmas_proof fmt lemmas binOp helper] handle the proofs 
-    which need auxiliary lemmas to be written.
-    It takes a list of lemmas (axioms), a binary operator and a proof helper to determine
-    how to output correct Coq code.**)
-let with_aux_lemmas_proof fmt axioms b h =
-  match (b, h) with
-  | _, Induction target ->
-      induction_tactic fmt target ;
-      pp_print_list reduce_axiom fmt axioms
-  | _, _ ->
-      raise Not_Supported_Yet
 
 (** [fact_description fmt prop_body] print the body of a "Fact" Coq construction with datas contains in an assertion AST.**)
 let fact_description fmt =
