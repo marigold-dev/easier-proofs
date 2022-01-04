@@ -6,10 +6,10 @@
 
     `ruby generate.rb ~/easier-proofs examples bool`
 
-- To clean up the generated `Coq` file(s) do:
+- To clean up the generated `Coq` file(s) `*.v`, `_CoqProject`, `Makefile` and `Makefile.conf` do:
   
     `ruby cleanup.rb ~/easier-proofs examples bool`
 
 - To compile `Coq` file(s) do: `make`
 
-- To clean up `Coq` file(s) do: `make clean`
+- To clean up `Coq` compile file(s) do: `make clean`
