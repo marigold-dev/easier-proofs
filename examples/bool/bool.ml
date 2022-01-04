@@ -28,7 +28,7 @@ type boolean = True | False
 let negb (b : boolean) : boolean = match b with True -> False | False -> True
 
 let andb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with True -> b2 | _ -> Faux
+  match b1 with True -> b2 | _ -> False
 
 let orb (b1 : boolean) (b2 : boolean) : boolean =
   match b1 with True -> True | _ -> b2
