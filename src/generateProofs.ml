@@ -41,17 +41,15 @@ let string_of_bop (b : bop) : string =
   | Disjunction ->
       "\\/"
 
-let straight_tactic (fmt : formatter) : unit = fprintf fmt "@[<v 0>crush.@,@]"
+let straight_tactic (fmt : formatter) : unit = fprintf fmt "crush"
 
-let split_tactic (fmt : formatter) : unit = fprintf fmt "@[split.@]@."
+let split_tactic (fmt : formatter) : unit = fprintf fmt "split"
 
 let destruct_tactic (fmt : formatter) (var : string) : unit =
-  fprintf fmt "@[destruct %s.@]" var
+  fprintf fmt "destruct %s" var
 
 let induction_tactic (fmt : formatter) (var : string) : unit =
-  fprintf fmt "@[induction %s.@]" var
-
-let nothing (fmt : formatter) : unit = fprintf fmt "@."
+  fprintf fmt "induction %s" var
 
 let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@."
 
@@ -61,6 +59,13 @@ let semicolon fmt = fprintf fmt ";"
 
 let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
 
+let dot fmt = fprintf fmt "@[.@]@."
+
+(** only rewrite hints for now **)
+let hint_rewrite fmt target =
+  fprintf fmt "#[local] Hint Rewrite %s" target ;
+  dot fmt
+
 (** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
     which don't need auxiliary lemmas to be written. 
     It takes a binary operator and a proof helper to determine
@@ -68,21 +73,22 @@ let reduce_axiom fmt axiom = fprintf fmt "@[crush. rewrite %s. crush.@]" axiom
 let standalone_proof fmt b h =
   match (b, h) with
   | Conjunction, Straight ->
-      split_tactic fmt
+      split_tactic fmt ; dot fmt
   | Disjunction, Left ->
-      fprintf fmt "@[left.@]@."
+      fprintf fmt "left" ; dot fmt
   | Disjunction, Right ->
-      fprintf fmt "@[right.@]@."
+      fprintf fmt "right" ; dot fmt
   | (Conjunction | Disjunction), _ ->
       raise (Incoherent_Helper "Unusable helper for conjunction/disjunction")
   | _, Straight ->
-      straight_tactic fmt
+      straight_tactic fmt ; dot fmt
   | _, Case target ->
-      destruct_tactic fmt target ; semicolon fmt ; straight_tactic fmt
+      destruct_tactic fmt target ; semicolon fmt ; straight_tactic fmt ; dot fmt
   | _, Induction target ->
       induction_tactic fmt target ;
       semicolon fmt ;
-      straight_tactic fmt
+      straight_tactic fmt ;
+      dot fmt
   | _ ->
       raise (Incoherent_Helper "left and right are helpers for disjunction only")
 
@@ -104,28 +110,29 @@ let fact_description fmt =
     | ASTAtom cnt ->
         fprintf fmt "%s" cnt
     | ASTAssert (bop, left, right, _) ->
-        fprintf fmt "@[<v 1>%a %s %a@]" aux left (string_of_bop bop) aux right
+        fprintf fmt "@[<v>%a %s %a.@,@]" aux left (string_of_bop bop) aux right
   in
   aux fmt
 
 (** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate, 
     to know if we need auxiliaries lemmas or not .**)
 let in_assertion fmt a axioms =
-  let target =
-    if List.length axioms = 0 then standalone_proof fmt
-    else with_aux_lemmas_proof fmt axioms
-  in
+  pp_print_list hint_rewrite fmt axioms ;
   let rec aux = function
     | ASTAtom _ ->
         straight_tactic fmt
     | ASTAssert (Disjunction, left, _, Left) ->
-        target Disjunction Left ; aux left
+        standalone_proof fmt Disjunction Left ;
+        aux left
     | ASTAssert (Disjunction, _, right, Right) ->
-        target Disjunction Right ; aux right
+        standalone_proof fmt Disjunction Right ;
+        aux right
     | ASTAssert (bop, ASTAtom _, ASTAtom _, helper) ->
-        target bop helper
+        standalone_proof fmt bop helper
     | ASTAssert (bop, left, right, helper) ->
-        target bop helper ; aux left ; aux right
+        standalone_proof fmt bop helper ;
+        aux left ;
+        aux right
   in
   aux a
 
@@ -139,7 +146,7 @@ let in_property fmt = function
       ; lemmas_aux= axioms } ->
       fprintf fmt "Fact %s : forall " assert_name' ;
       pp_print_list arg fmt args' ;
-      fprintf fmt "@[, %a.@]@." fact_description assertt' ;
+      fprintf fmt "@[, %a@]@." fact_description assertt' ;
       in_assertion fmt assertt' axioms ;
       qed fmt
   | ASTProp
@@ -149,7 +156,7 @@ let in_property fmt = function
       ; assertt= assertt'
       ; lemmas_aux= axioms } ->
       fprintf fmt "Fact %s : " assert_name' ;
-      fprintf fmt "@[%a.@]@." fact_description assertt' ;
+      fprintf fmt "@[%a@]@." fact_description assertt' ;
       in_assertion fmt assertt' axioms ;
       qed fmt
   | _ ->
@@ -157,15 +164,15 @@ let in_property fmt = function
 
 let in_block fmt = function
   | ASTBlock (blockName, props) ->
-      fprintf fmt "@[<v 0>(* Proofs for %s *)@,@]" blockName ;
+      fprintf fmt "@[<v>(* Proofs for %s *)@,@]" blockName ;
       pp_print_list in_property fmt props
 
 let in_blocks fmt = function
   | ASTBlocks properties_blocks ->
-      fprintf fmt "@[<v 0>From Test Require Import CpdtTactics.@,@]" ;
-      fprintf fmt "@[<v 0>(* ----PROOFS---- *)@,@]" ;
+      fprintf fmt "@[<v>From Test Require Import CpdtTactics.@,@]" ;
+      fprintf fmt "@[<v>(* ----PROOFS---- *)@,@]" ;
       pp_print_list in_block fmt properties_blocks
 
 let generate_proof fmt program =
   fprintf fmt "%a" in_blocks program ;
-  fprintf fmt "@[<v 0> (**END OF PROOFS**)@]@."
+  fprintf fmt "@[<v> (**END OF PROOFS**)@]@."
