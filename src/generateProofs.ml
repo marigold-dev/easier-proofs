@@ -40,6 +40,8 @@ let string_of_bop (b : bop) : string =
       "/\\"
   | Disjunction ->
       "\\/"
+  | Implication ->
+      "->"
 
 let straight_tactic (fmt : formatter) : unit = fprintf fmt "crush"
 
@@ -102,9 +104,9 @@ let fact_description fmt =
   aux fmt
 
 (** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate,
-    and if we need auxiliaries lemmas or not.**)
-let in_assertion fmt a axioms =
-  pp_print_list hint_rewrite fmt axioms ;
+    and use the hints if there is some.**)
+let in_assertion fmt a hints =
+  pp_print_list hint_rewrite fmt hints ;
   let rec aux = function
     | ASTAtom _ ->
         straight_tactic fmt
@@ -130,21 +132,21 @@ let in_property fmt = function
       ; qtf= Some Forall
       ; args= Some args'
       ; assertt= assertt'
-      ; lemmas_aux= axioms } ->
+      ; hints= hints } ->
       fprintf fmt "Fact %s : forall " assert_name' ;
       pp_print_list arg fmt args' ;
       fprintf fmt "@[, %a@]@." fact_description assertt' ;
-      in_assertion fmt assertt' axioms ;
+      in_assertion fmt assertt' hints ;
       qed fmt
   | ASTProp
       { assert_name= assert_name'
       ; qtf= _
       ; args= None
       ; assertt= assertt'
-      ; lemmas_aux= axioms } ->
+      ; hints= hints } ->
       fprintf fmt "Fact %s : " assert_name' ;
       fprintf fmt "@[%a@]@." fact_description assertt' ;
-      in_assertion fmt assertt' axioms ;
+      in_assertion fmt assertt' hints ;
       qed fmt
   | _ ->
       raise Not_Supported_Yet

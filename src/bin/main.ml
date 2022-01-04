@@ -40,7 +40,7 @@ let my_bool_properties =
         ; prop "andb_true3"
             ~context:(forall [("b", "boolean")])
             (atom "andb b True" =.= atom "b" >> induction "n")
-            ~axioms:["andb_true1"; "andb_true2"] ] ]
+            ~hints:["andb_true1"; "andb_true2"] ] ]
 
 let () =
   if Array.length Sys.argv = 2 then

@@ -25,7 +25,7 @@
 
 type quant = Forall
 
-type bop = Equality | Inequality | Conjunction | Disjunction
+type bop = Equality | Inequality | Conjunction | Disjunction | Implication
 
 type helper = Straight | Case of string | Induction of string | Left | Right
 
@@ -40,7 +40,7 @@ type prop_context =
   ; qtf: quant option
   ; args: arg list option
   ; assertt: prop_body
-  ; lemmas_aux: string list }
+  ; hints: string list }
 
 type prop = ASTProp of prop_context
 
