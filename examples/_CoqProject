@@ -1,5 +1,0 @@
--Q coq_lib/ Test
-
-coq_lib/CpdtTactics.v
--arg -impredicative-set
-bool/Bool.v
