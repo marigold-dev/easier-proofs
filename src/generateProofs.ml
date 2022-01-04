@@ -65,8 +65,9 @@ let hint_rewrite fmt target =
   dot fmt
 
 (** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
-    which dont need auxiliar lemmas to be written, takes a binary operator and a proof helper to determine
-    how print the right coq code.**)
+    which don't need auxiliary lemmas to be written. 
+    It takes a binary operator and a proof helper to determine
+    how to print the correct Coq code.**)
 let standalone_proof fmt b h =
   match (b, h) with
   | Conjunction, Straight ->
@@ -76,7 +77,7 @@ let standalone_proof fmt b h =
   | Disjunction, Right ->
       fprintf fmt "right" ; dot fmt
   | (Conjunction | Disjunction), _ ->
-      raise (Incoherent_Helper "Unusable helper for conjonction/disjonction")
+      raise (Incoherent_Helper "Unusable helper for conjunction/disjunction")
   | _, Straight ->
       straight_tactic fmt ; dot fmt
   | _, Case target ->
@@ -87,9 +88,10 @@ let standalone_proof fmt b h =
       straight_tactic fmt ;
       dot fmt
   | _ ->
-      raise (Incoherent_Helper "left and right are helpers for disjonction only")
+      raise (Incoherent_Helper "left and right are helpers for disjunction only")
 
-(** [fact_description fmt prop_body] print the body of a "Fact" coq construction with datas contains in a assertion AST.**)
+(** [fact_description fmt prop_body] print the body of a "Fact" Coq construction
+ with datas contains in an assertion AST.**)
 let fact_description fmt =
   let rec aux fmt = function
     | ASTAtom cnt ->
@@ -99,8 +101,8 @@ let fact_description fmt =
   in
   aux fmt
 
-(** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate, and if we need auxiliars lemmas
-    or not .**)
+(** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate,
+    and if we need auxiliaries lemmas or not.**)
 let in_assertion fmt a axioms =
   pp_print_list hint_rewrite fmt axioms ;
   let rec aux = function
