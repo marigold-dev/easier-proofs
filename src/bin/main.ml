@@ -28,7 +28,7 @@ open Dslprop.GenerateProofs
 open Format
 open Stdio
 
-let my_bool_properties =
+let nat_add_commut =
   to_proofs
     [ block "andb"
         [ prop "andb_true2"
@@ -48,6 +48,6 @@ let () =
     Out_channel.with_file ~append:true ~fail_if_exists:false filename
       ~f:(fun out ->
         let fmt = formatter_of_out_channel out in
-        generate_proof fmt my_bool_properties ;
-        close_out out )
+        generate_proof fmt nat_add_commut;
+        close_out out)
   else fprintf err_formatter "target file name missing"
