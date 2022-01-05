@@ -1,10 +1,7 @@
 build: clean
 	dune build
-	dune exec test/dslprop_test.exe
+    dune build @fmt --auto-promote
 clean:
 	dune clean
-build: clean
-	dune build
-	dune exec test/dslprop_test.exe
-clean:
-	dune clean
+test:
+    dune exec src/tests/dslprop_test.exe

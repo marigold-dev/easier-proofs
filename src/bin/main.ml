@@ -39,7 +39,7 @@ let my_bool_properties =
             (atom "andb b True" =.= atom "b" >> case "b")
         ; prop "andb_true3"
             ~context:(forall [("b", "boolean")])
-            (atom "andb b True" =.= atom "b" >> induction "n")
+            (atom "andb b True" =.= atom "b" >> induction "b")
             ~hints:["andb_true1"; "andb_true2"] ] ]
 
 let () =
