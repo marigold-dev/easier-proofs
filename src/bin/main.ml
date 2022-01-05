@@ -28,19 +28,23 @@ open Dslprop.GenerateProofs
 open Format
 open Stdio
 
-let my_bool_properties =
+let nat_add_commut =
   to_proofs
-    [ block "andb"
-        [ prop "andb_true2"
-            ~context:(forall [("b", "boolean")])
-            (atom "andb True b" =.= atom "b" >> straight)
-        ; prop "andb_true1"
-            ~context:(forall [("b", "boolean")])
-            (atom "andb b True" =.= atom "b" >> case "b")
-        ; prop "andb_true3"
-            ~context:(forall [("b", "boolean")])
-            (atom "andb b True" =.= atom "b" >> induction "n")
-            ~hints:["andb_true1"; "andb_true2"] ] ]
+    [
+      block "commutative property of Nat addition"
+        [
+          prop "add_right_zero"
+            ~context:(forall [ ("n", "nat") ])
+            (atom "add n Zero" =.= atom "n" >> induction "n");
+          prop "add_s"
+            ~context:(forall [ ("x", "nat"); ("y", "nat") ])
+            (atom "S (add x y)" =.= atom "add x (S y)" >> induction "x");
+          prop "add_commut"
+            ~context:(forall [ ("x", "nat"); ("y", "nat") ])
+            (atom "add x y" =.= atom "add y x" >> induction "x")
+            ~hints:[ "add_right_zero"; "add_s" ];
+        ];
+    ]
 
 let () =
   if Array.length Sys.argv = 2 then
@@ -48,6 +52,6 @@ let () =
     Out_channel.with_file ~append:true ~fail_if_exists:false filename
       ~f:(fun out ->
         let fmt = formatter_of_out_channel out in
-        generate_proof fmt my_bool_properties ;
-        close_out out )
+        generate_proof fmt nat_add_commut;
+        close_out out)
   else fprintf err_formatter "target file name missing"
