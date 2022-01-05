@@ -32,24 +32,3 @@ let andb (b1 : boolean) (b2 : boolean) : boolean =
 
 let orb (b1 : boolean) (b2 : boolean) : boolean =
   match b1 with True -> True | _ -> b2
-From Test Require Import CpdtTactics.
-(* ----PROOFS---- *)
-(* Proofs for commutative property of Nat addition *)
-Fact add_right_zero : forall  (n:nat) , add n Zero = n.
-                                        
-induction n;crush.
-Qed.
-Fact add_s : forall  (x:nat) 
- (y:nat) , S (add x y) = add x (S y).
-           
-induction x;crush.
-Qed.
-Fact add_commut : forall  (x:nat) 
- (y:nat) , add x y = add y x.
-           
-#[local] Hint Rewrite add_right_zero.
-
-#[local] Hint Rewrite add_s.
-induction x;crush.
-Qed.
- (**END OF PROOFS**)
