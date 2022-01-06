@@ -97,9 +97,7 @@ Qed.
 
 ```
 
-## Build and run test cases 
+## Build the source code
 
 First we need to build our source code by `dune build`.
 To run the test, simply do `dune test`.
-
-To combine these two tasks above, we can do: `make`.
