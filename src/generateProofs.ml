@@ -132,20 +132,17 @@ let in_property fmt = function
       ; qtf= Some Forall
       ; args= Some args'
       ; assertt= assertt'
-      ; hints= hints } ->
+      ; hints } ->
       fprintf fmt "Fact %s : forall " assert_name' ;
       pp_print_list arg fmt args' ;
-      fprintf fmt "@[, %a.@]@." fact_description assertt';
+      fprintf fmt "@[, %a.@]@." fact_description assertt' ;
       in_assertion fmt assertt' hints ;
       qed fmt
   | ASTProp
-      { assert_name= assert_name'
-      ; qtf= _
-      ; args= None
-      ; assertt= assertt'
-      ; hints= hints } ->
+      {assert_name= assert_name'; qtf= _; args= None; assertt= assertt'; hints}
+    ->
       fprintf fmt "Fact %s : " assert_name' ;
-      fprintf fmt "@[%a.@]@." fact_description assertt';
+      fprintf fmt "@[%a.@]@." fact_description assertt' ;
       in_assertion fmt assertt' hints ;
       qed fmt
   | _ ->

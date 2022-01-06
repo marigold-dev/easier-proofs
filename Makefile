@@ -1,7 +1,13 @@
-build: clean
+build: 
 	dune build
-    dune build @fmt --auto-promote
+	clean
+	fmt
+    
 clean:
 	dune clean
+
+fmt: 
+    dune build @fmt 
+
 test:
     dune exec src/tests/dslprop_test.exe
