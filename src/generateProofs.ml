@@ -99,7 +99,7 @@ let fact_description fmt =
     | ASTAtom cnt ->
         fprintf fmt "%s" cnt
     | ASTAssert (bop, left, right, _) ->
-        fprintf fmt "@[<v>%a %s %a.@,@]" aux left (string_of_bop bop) aux right
+        fprintf fmt "@[%a %s %a@]" aux left (string_of_bop bop) aux right
   in
   aux fmt
 
@@ -135,7 +135,7 @@ let in_property fmt = function
       ; hints= hints } ->
       fprintf fmt "Fact %s : forall " assert_name' ;
       pp_print_list arg fmt args' ;
-      fprintf fmt "@[, %a@]@." fact_description assertt' ;
+      fprintf fmt "@[, %a.@]@." fact_description assertt';
       in_assertion fmt assertt' hints ;
       qed fmt
   | ASTProp
@@ -145,7 +145,7 @@ let in_property fmt = function
       ; assertt= assertt'
       ; hints= hints } ->
       fprintf fmt "Fact %s : " assert_name' ;
-      fprintf fmt "@[%a@]@." fact_description assertt' ;
+      fprintf fmt "@[%a.@]@." fact_description assertt';
       in_assertion fmt assertt' hints ;
       qed fmt
   | _ ->
