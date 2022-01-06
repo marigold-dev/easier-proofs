@@ -27,6 +27,7 @@ open Dslprop.DslProp
 open Dslprop.GenerateProofs
 open Format
 
+(** Boolean *)
 let bool_and_expected =
   fprintf std_formatter
     "From Test Require Import CpdtTactics.\n\
@@ -41,6 +42,25 @@ let bool_and_expected =
     \  crush.\n\
     \  Qed."
 
+let bool_and_properties =
+  to_proofs
+    [ block "andb"
+        [ prop "andb_true1"
+            ~context:(forall [("b", "boolean")])
+            ( atom "andb b True" =.= atom "b" >> case "b"
+            &^ (atom "andb True b" =.= atom "b" >> straight) ) ] ]
+
+let test_bool_and () =
+  Alcotest.(check unit)
+    "have to match" bool_and_expected
+    (generate_proof std_formatter bool_and_properties)
+
+(** Natural numbers *)
+
+let nat_trivial =
+  to_proofs
+    [block "nat" [prop "diff42_41" (atom "42" =!= atom "41" >> straight)]]
+
 let nat_trivial_expected =
   fprintf std_formatter
     "From Test Require Import CpdtTactics.\n\
@@ -49,6 +69,21 @@ let nat_trivial_expected =
     \  Fact diff42_41 :  42 <> 41.\n\
     \  crush.\n\
     \  Qed."
+
+let test_nat_inequal () =
+  Alcotest.(check unit)
+    "have to match" nat_trivial_expected
+    (generate_proof std_formatter nat_trivial)
+
+let nat_add_properties =
+  to_proofs
+    [ block "add"
+        [ prop "add_0"
+            ~context:(forall [("m", "nat")])
+            (atom "add Zero m" =.= atom "m" >> straight)
+        ; prop "add_1"
+            ~context:(forall [("n", "nat")])
+            (atom "add n Zero" =.= atom "n" >> induction "n") ] ]
 
 let nat_add_expected =
   fprintf std_formatter
@@ -63,38 +98,6 @@ let nat_add_expected =
     \  crush.\n\
     \  crush.\n\
     \  Qed."
-
-let bool_and_properties =
-  to_proofs
-    [ block "andb"
-        [ prop "andb_true1"
-            ~context:(forall [("b", "boolean")])
-            ( atom "andb b True" =.= atom "b" >> case "b"
-            &^ (atom "andb True b" =.= atom "b" >> straight) ) ] ]
-
-let nat_trivial =
-  to_proofs
-    [block "nat" [prop "diff42_41" (atom "42" =!= atom "41" >> straight)]]
-
-let nat_add_properties =
-  to_proofs
-    [ block "add"
-        [ prop "add_0"
-            ~context:(forall [("m", "nat")])
-            (atom "add Zero m" =.= atom "m" >> straight)
-        ; prop "add_1"
-            ~context:(forall [("n", "nat")])
-            (atom "add n Zero" =.= atom "n" >> induction "n") ] ]
-
-let test_bool_and () =
-  Alcotest.(check unit)
-    "have to match" bool_and_expected
-    (generate_proof std_formatter bool_and_properties)
-
-let test_nat_inequal () =
-  Alcotest.(check unit)
-    "have to match" nat_trivial_expected
-    (generate_proof std_formatter nat_trivial)
 
 let test_nat_add () =
   Alcotest.(check unit)

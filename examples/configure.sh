@@ -10,7 +10,7 @@ echo "-arg -impredicative-set" >> _CoqProject
 echo "-arg -w" >> _CoqProject
 echo "-arg -notation-overridden,-unexpected-implicit-declaration" >> _CoqProject
 echo >> _CoqProject
-find bool coq_lib -name "*.v" | sort >> _CoqProject
+find bool nat list coq_lib -name "*.v" | sort >> _CoqProject
 
 # Generate the Makefile
 coq_makefile -f _CoqProject -o Makefile

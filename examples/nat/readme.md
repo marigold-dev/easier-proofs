@@ -1,5 +1,5 @@
 # Peano natural number operators
-
+ 
 Peano natural number is defined as 
 
 ```

@@ -23,12 +23,27 @@
 (*                                                                           *)
 (*****************************************************************************)
 
-type boolean = True | False
+open Dslprop.DslProp
+open Dslprop.GenerateProofs
+open Format
+open Stdio
 
-let negb (b : boolean) : boolean = match b with True -> False | False -> True
+let list_prop =
+  to_proofs
+    [ block "Concat list with nil"
+        [ prop "append_nil_left"
+            ~context:(forall [("a", "Set"); ("xs", "myList a")])
+            (atom "append Nil xs" =.= atom "xs" >> straight)
+        ; prop "append_nil_right"
+            ~context:(forall [("a", "Set"); ("xs", "myList a")])
+            (atom "append xs Nil" =.= atom "xs" >> induction "xs") ] ]
 
-let andb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with True -> b2 | _ -> False
-
-let orb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with True -> True | _ -> b2
+let () =
+  if Array.length Sys.argv = 2 then
+    let filename = Sys.argv.(1) in
+    Out_channel.with_file ~append:true ~fail_if_exists:false filename
+      ~f:(fun out ->
+        let fmt = formatter_of_out_channel out in
+        generate_proof fmt list_prop ;
+        close_out out )
+  else fprintf err_formatter "target file name missing"

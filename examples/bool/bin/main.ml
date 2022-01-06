@@ -23,12 +23,25 @@
 (*                                                                           *)
 (*****************************************************************************)
 
-type boolean = True | False
+open Dslprop.DslProp
+open Dslprop.GenerateProofs
+open Format
+open Stdio
 
-let negb (b : boolean) : boolean = match b with True -> False | False -> True
+let bool_properties =
+  to_proofs
+    [ block "Conjuction property of Bool"
+        [ prop "andb_true"
+            ~context:(forall [("b", "boolean")])
+            ( atom "andb b True" =.= atom "b" >> case "b"
+            &^ (atom "andb True b" =.= atom "b" >> straight) ) ] ]
 
-let andb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with True -> b2 | _ -> False
-
-let orb (b1 : boolean) (b2 : boolean) : boolean =
-  match b1 with True -> True | _ -> b2
+let () =
+  if Array.length Sys.argv = 2 then
+    let filename = Sys.argv.(1) in
+    Out_channel.with_file ~append:true ~fail_if_exists:false filename
+      ~f:(fun out ->
+        let fmt = formatter_of_out_channel out in
+        generate_proof fmt bool_properties ;
+        close_out out )
+  else fprintf err_formatter "target file name missing"
