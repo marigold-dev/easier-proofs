@@ -10,7 +10,7 @@ check:
 
 .PHONY: test
 test: # Run the unit tests
-	dune exec src/tests/dslprop_test.exe  
+	dune build @src/tests/runtest
   
 .PHONY: clean 
 clean: # Clean build artifacts and other generated files
