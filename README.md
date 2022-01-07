@@ -99,5 +99,5 @@ Qed.
 
 ## Build the source code
 
-First we need to build our source code by `make`.
-To run the test, simply do `make test`.
+First we need to build our source code by `dune build`.
+To run the test, simply do `dune test`.

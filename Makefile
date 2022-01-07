@@ -1,25 +1,13 @@
-.DEFAULT_GOAL := all
-
-.PHONY: all
-all: 
-	dune build @all
-
-.PHONY: check
-check:
-	dune build @check  
-
-.PHONY: test
-test: # Run the unit tests
-	dune build @src/tests/runtest
-  
-.PHONY: clean 
-clean: # Clean build artifacts and other generated files
+build: 
+	dune build
+	clean
+	fmt
+    
+clean:
 	dune clean
 
-.PHONY: fmt 
-fmt: # Format the codebase with ocamlformat 
-	dune build @fmt --auto-promote
+fmt: 
+    dune build @fmt 
 
-.PHONY: watch 
-watch: # Watch for the filesyste, and rebuild on every change 
-	dune build --watch
+test:
+    dune exec src/tests/dslprop_test.exe
