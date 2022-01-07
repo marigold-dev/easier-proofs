@@ -48,18 +48,18 @@ let destruct_tactic (fmt : formatter) (var : string) : unit =
 let induction_tactic (fmt : formatter) (var : string) : unit =
   fprintf fmt "induction %s" var
 
-let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@."
+let qed (fmt : formatter) : unit = fprintf fmt "@[Qed.@]@.\n"
 
-let arg fmt = function ASTArg (id, typ) -> fprintf fmt " (%s:%s) " id typ
+let arg fmt = function ASTArg (id, typ) -> fprintf fmt " (%s: %s) " id typ
 
-let semicolon fmt = fprintf fmt ";"
+let semicolon fmt = fprintf fmt "; "
 
 let dot fmt = fprintf fmt "@[.@]@."
 
 (** only rewrite hints for now **)
 let hint_rewrite fmt target =
   fprintf fmt "#[local] Hint Rewrite %s" target ;
-  dot fmt
+  fprintf fmt "@[.@]"
 
 (** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
     which don't need auxiliary lemmas to be written. 
@@ -109,6 +109,7 @@ let fact_description fmt =
     and use the hints if there is some.**)
 let in_assertion fmt a hints =
   pp_print_list hint_rewrite fmt hints ;
+  fprintf fmt "\n" ;
   let rec aux = function
     | ASTAtom _ -> straight_tactic fmt
     | ASTAssert (Disjunction, left, _, Left) ->
@@ -136,7 +137,7 @@ let in_property fmt = function
         assertt = assertt';
         hints;
       } ->
-      fprintf fmt "Fact %s : forall " assert_name' ;
+      fprintf fmt "Fact %s : forall" assert_name' ;
       pp_print_list arg fmt args' ;
       fprintf fmt "@[, %a.@]@." fact_description assertt' ;
       in_assertion fmt assertt' hints ;
@@ -162,8 +163,8 @@ let in_block fmt = function
 
 let in_blocks fmt = function
   | ASTBlocks properties_blocks ->
-      fprintf fmt "@[<v>From Test Require Import CpdtTactics.@,@]" ;
-      fprintf fmt "@[<v>(* ----PROOFS---- *)@,@]" ;
+      fprintf fmt "\n\n@[<v>(* ----PROOFS---- *)@]" ;
+      fprintf fmt "@.@[<v>From Test Require Import CpdtTactics.@,@]" ;
       pp_print_list in_block fmt properties_blocks
 
 let generate_proof fmt program =
