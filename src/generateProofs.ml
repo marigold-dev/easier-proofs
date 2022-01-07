@@ -32,11 +32,16 @@ exception Incoherent_Helper of string
 
 let string_of_bop (b : bop) : string =
   match b with
-  | Equality -> "="
-  | Inequality -> "<>"
-  | Conjunction -> "/\\"
-  | Disjunction -> "\\/"
-  | Implication -> "->"
+  | Equality ->
+      "="
+  | Inequality ->
+      "<>"
+  | Conjunction ->
+      "/\\"
+  | Disjunction ->
+      "\\/"
+  | Implication ->
+      "->"
 
 let straight_tactic (fmt : formatter) : unit = fprintf fmt "crush"
 
@@ -68,38 +73,31 @@ let hint_rewrite fmt target =
 let standalone_proof fmt b h =
   match (b, h) with
   | Conjunction, Straight ->
-      split_tactic fmt ;
-      dot fmt
+      split_tactic fmt ; dot fmt
   | Disjunction, Left ->
-      fprintf fmt "left" ;
-      dot fmt
+      fprintf fmt "left" ; dot fmt
   | Disjunction, Right ->
-      fprintf fmt "right" ;
-      dot fmt
+      fprintf fmt "right" ; dot fmt
   | (Conjunction | Disjunction), _ ->
       raise (Incoherent_Helper "Unusable helper for conjunction/disjunction")
   | _, Straight ->
-      straight_tactic fmt ;
-      dot fmt
+      straight_tactic fmt ; dot fmt
   | _, Case target ->
-      destruct_tactic fmt target ;
-      semicolon fmt ;
-      straight_tactic fmt ;
-      dot fmt
+      destruct_tactic fmt target ; semicolon fmt ; straight_tactic fmt ; dot fmt
   | _, Induction target ->
       induction_tactic fmt target ;
       semicolon fmt ;
       straight_tactic fmt ;
       dot fmt
   | _ ->
-      raise
-        (Incoherent_Helper "left and right are helpers for disjunction only")
+      raise (Incoherent_Helper "left and right are helpers for disjunction only")
 
 (** [fact_description fmt prop_body] print the body of a "Fact" Coq construction
  with datas contains in an assertion AST.**)
 let fact_description fmt =
   let rec aux fmt = function
-    | ASTAtom cnt -> fprintf fmt "%s" cnt
+    | ASTAtom cnt ->
+        fprintf fmt "%s" cnt
     | ASTAssert (bop, left, right, _) ->
         fprintf fmt "@[%a %s %a@]" aux left (string_of_bop bop) aux right
   in
@@ -111,7 +109,8 @@ let in_assertion fmt a hints =
   pp_print_list hint_rewrite fmt hints ;
   fprintf fmt "\n" ;
   let rec aux = function
-    | ASTAtom _ -> straight_tactic fmt
+    | ASTAtom _ ->
+        straight_tactic fmt
     | ASTAssert (Disjunction, left, _, Left) ->
         standalone_proof fmt Disjunction Left ;
         aux left
@@ -130,31 +129,25 @@ let in_assertion fmt a hints =
 (** [in_property fmt prop] is the function that show the pipeline of an entire property translation**)
 let in_property fmt = function
   | ASTProp
-      {
-        assert_name = assert_name';
-        qtf = Some Forall;
-        args = Some args';
-        assertt = assertt';
-        hints;
-      } ->
+      { assert_name= assert_name'
+      ; qtf= Some Forall
+      ; args= Some args'
+      ; assertt= assertt'
+      ; hints } ->
       fprintf fmt "Fact %s : forall" assert_name' ;
       pp_print_list arg fmt args' ;
       fprintf fmt "@[, %a.@]@." fact_description assertt' ;
       in_assertion fmt assertt' hints ;
       qed fmt
   | ASTProp
-      {
-        assert_name = assert_name';
-        qtf = _;
-        args = None;
-        assertt = assertt';
-        hints;
-      } ->
+      {assert_name= assert_name'; qtf= _; args= None; assertt= assertt'; hints}
+    ->
       fprintf fmt "Fact %s : " assert_name' ;
       fprintf fmt "@[%a.@]@." fact_description assertt' ;
       in_assertion fmt assertt' hints ;
       qed fmt
-  | _ -> raise Not_Supported_Yet
+  | _ ->
+      raise Not_Supported_Yet
 
 let in_block fmt = function
   | ASTBlock (blockName, props) ->
@@ -163,7 +156,8 @@ let in_block fmt = function
 
 let in_blocks fmt = function
   | ASTBlocks properties_blocks ->
-      fprintf fmt "\n\n@[<v>(* ----PROOFS---- *)@]" ;
+      fprintf fmt
+        "\n\n@[<v>(* ---- Proofs generate by easier-proofs ---- *)@]\n" ;
       fprintf fmt "@.@[<v>From Test Require Import CpdtTactics.@,@]" ;
       pp_print_list in_block fmt properties_blocks
 
