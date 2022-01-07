@@ -65,10 +65,6 @@ let dot fmt = fprintf fmt "@[.@]@."
 let hint_rewrite fmt target =
   fprintf fmt "#[local] Hint Rewrite %s" target
 
-(** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
-    which don't need auxiliary lemmas to be written. 
-    It takes a binary operator and a proof helper to determine
-    how to print the correct Coq code.**)
 let standalone_proof fmt b h =
   match (b, h) with
   | Conjunction, Straight ->
@@ -91,8 +87,6 @@ let standalone_proof fmt b h =
   | _ ->
       raise (Incoherent_Helper "left and right are helpers for disjunction only")
 
-(** [fact_description fmt prop_body] print the body of a "Fact" Coq construction
- with datas contains in an assertion AST.**)
 let fact_description fmt =
   let rec aux fmt = function
     | ASTAtom cnt ->
@@ -102,8 +96,6 @@ let fact_description fmt =
   in
   aux fmt
 
-(** [in_assertion fmt prop_body axioms] determine what kind of proof we have to generate,
-    and use the hints if there is some.**)
 let in_assertion fmt a hints =
   pp_print_list hint_rewrite fmt hints ;
   let rec aux = function
@@ -124,7 +116,6 @@ let in_assertion fmt a hints =
   in
   aux a
 
-(** [in_property fmt prop] is the function that show the pipeline of an entire property translation**)
 let in_property fmt = function
   | ASTProp
       { assert_name= assert_name'
