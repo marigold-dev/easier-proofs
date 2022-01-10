@@ -101,3 +101,9 @@ Qed.
 
 First we need to build our source code by `dune build`.
 To run the test, simply do `dune test`.
+
+## Documentation
+
+You need odoc (ver 2.0.0), and execute `dune build @doc-private` and 
+
+`open _build/default/_doc/_html/dslprop@13ec3a8d874f/Dslprop/index.html `

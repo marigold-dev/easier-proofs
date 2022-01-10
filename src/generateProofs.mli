@@ -1,12 +1,13 @@
 
-(** The core of easier-proof, the file containing all the functions for generating proof from a program written in our DSL
+(** 
+    The core of easier-proof, the file containing all the functions for generating proof from a program written in our DSL
 
     In easier proof, we represente assertion with a DSL, a program in this DSL is a list of blocks, each block concern a precise subject, and in
     each block we have one of several property we want to prove. We can express an assertion, and we have to give "helpers" with a property
     for helping easier-proof to determine how to generate the proof of the assertion.
 
-    Watch ast.ml and dslProp.ml for more information about the DSL, the helpers etc....
-**)
+    Watch {!module:Ast} and {!module:DslProp} for more information about the DSL, the helpers etc....
+*)
 
 exception Not_Supported_Yet
 exception Incoherent_Helper of string
@@ -17,10 +18,10 @@ val string_of_bop : Ast.bop -> string
     want to prove is solvable with one chlipala's crush.*)
 val straight_tactic : Format.formatter -> unit
 
-(**[split_tactic fmt]*)
+(**[split_tactic fmt] print the induction split, needed if we encounter a conjonction operator in our assertion*)
 val split_tactic : Format.formatter -> unit
 
-(**[destruct_tactic fmt var]**)
+(**[destruct_tactic fmt var] print the destruct tactic on var, needed for a case reasoning on our proof*)
 val destruct_tactic : Format.formatter -> string -> unit
 
 (**[induction_tactic fmt var] print the induction tactic on var*)
@@ -39,7 +40,7 @@ val semicolon : Format.formatter -> unit
     in order to automate a part of the proof*)
 val dot : Format.formatter -> unit
 
-(**[hint_rewrite fmt name]*)
+(**[hint_rewrite fmt name] generate a hint for a rewrite needed in the generated proof*)
 val hint_rewrite : Format.formatter -> string -> unit
 
 (** [standalone_proof fmt binOp helper] handle the "standalone" proofs 
@@ -48,8 +49,7 @@ It takes a binary operator and a proof helper to determine
 how to print the correct Coq code.*)
 val standalone_proof : Format.formatter -> Ast.bop -> Ast.helper -> unit
 
-(** [fact_description fmt prop_body] print the body of a "Fact" Coq construction
-with datas contains in an assertion AST.*)
+(** [fact_description fmt prop_body] generate the body of a "Fact" Coq construction.*)
 val fact_description : Format.formatter -> Ast.prop_body -> unit
 
 (** [in_assertion fmt prop_body hints] determine what kind of proof we have to generate,
@@ -57,15 +57,14 @@ val fact_description : Format.formatter -> Ast.prop_body -> unit
 val in_assertion :
     Format.formatter -> Ast.prop_body -> string list -> unit
 
-(** [in_property fmt prop] is the function that show the pipeline of an entire property translation*)
+(** [in_property fmt prop] is the function that show the pipeline of an entire proof generation for a given assertion*)
 val in_property : Format.formatter -> Ast.prop -> unit
 
 val in_block : Format.formatter -> Ast.block -> unit
 
-(**[in_blocks fmt blocks]*)
 val in_blocks : Format.formatter -> Ast.blocks -> unit
 
-(**[generate_proof fmt program]*)
+(**[generate_proof fmt program] generate a proof of a program in the DSL which can express assertion.*)
 val generate_proof : Format.formatter -> Ast.blocks -> unit
 
 
