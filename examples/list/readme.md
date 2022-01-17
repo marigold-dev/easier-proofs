@@ -62,3 +62,12 @@ TODO
 TODO
 ## Remove
 TODO
+
+
+<!--
+Ideas:
+ref: https://www.cs.princeton.edu/courses/archive/fall07/cos595/stdlib/html/Coq.Lists.List.html
+
+Advance by combining with bool and natural numbers
+chrome-extension://oemmndcbldboiebfnladdacbdfmadadm/http://www.lix.polytechnique.fr/~barras/mpri/exam2012.pdf
+>
