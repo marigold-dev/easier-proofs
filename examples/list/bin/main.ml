@@ -23,8 +23,8 @@
 (*                                                                           *)
 (*****************************************************************************)
 
-open Dslprop.DslProp
-open Dslprop.GenerateProofs
+open Easier_proof.DslProp
+open Easier_proof.GenerateProofs
 open Format
 open Stdio
 
