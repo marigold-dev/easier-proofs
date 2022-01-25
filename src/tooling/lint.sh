@@ -53,7 +53,7 @@ EOF
 
 declare -a source_directories
 
-source_directories=(~/easier-proofs/src ~/easier-proofs/src/tests)
+source_directories=(src ~/easier-proofs/src/tests)
 
 update_all_dot_ocamlformats () {
     if git diff --name-only HEAD --exit-code
