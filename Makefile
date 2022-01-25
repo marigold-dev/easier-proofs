@@ -27,3 +27,8 @@ watch: # Watch for the filesyste, and rebuild on every change
 .PHONY: doc
 doc: # Generate odoc 
 	dune build @doc-private
+
+.PHONY: check-linting
+check-linting:
+	@src/tooling/lint.sh --check-ocamlformat
+	@dune build @fmt
