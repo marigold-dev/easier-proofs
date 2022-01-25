@@ -99,11 +99,11 @@ Qed.
 
 ## Build the source code
 
-First we need to build our source code by `dune build`.
-To run the test, simply do `dune test`.
+First we need to build our source code by `make`.
+To run the test, simply do `make test`.
 
 ## Documentation
 
-You need odoc (ver 2.0.0), and execute `dune build @doc-private` and 
+We need to install odoc (> 2.0.0), to build the document do `make; make doc`.
 
-`open _build/default/_doc/_html/dslprop@13ec3a8d874f/Dslprop/index.html `
+This is a document for private library and it can be found at `_build/default/_doc/_html/<library>`.

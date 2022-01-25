@@ -23,3 +23,7 @@ fmt: # Format the codebase with ocamlformat
 .PHONY: watch 
 watch: # Watch for the filesyste, and rebuild on every change 
 	dune build --watch
+
+.PHONY: doc
+doc: # Generate odoc 
+	dune build @doc-private
