@@ -53,7 +53,7 @@ EOF
 
 declare -a source_directories
 
-source_directories=(src ~/easier-proofs/src/tests)
+source_directories=(src src/tests)
 
 update_all_dot_ocamlformats () {
     if git diff --name-only HEAD --exit-code
@@ -67,8 +67,8 @@ update_all_dot_ocamlformats () {
     for d in $interesting_directories ; do
         ofmt=$d/.ocamlformat
         case "$d" in
-            ~/easier-proofs/src | \
-            ~/easier-proofs/src/tests )
+            src | \
+            src/tests )
                 make_dot_ocamlformat "$ofmt"
                 ;;
             * )
