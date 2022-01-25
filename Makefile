@@ -28,6 +28,11 @@ watch: # Watch for the filesyste, and rebuild on every change
 doc: # Generate odoc 
 	dune build @doc-private
 
-.PHONY: check-linting
-check-linting:
+.PHONE: update-ocamlformat
+update-ocamlformat:
 	@src/tooling/lint.sh --update-ocamlformat
+
+.PHONY: check-linting
+check-linting:	
+	@src/tooling/lint.sh --check-ocamlformat
+	@dune build @fmt

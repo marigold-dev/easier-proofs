@@ -79,7 +79,6 @@ update_all_dot_ocamlformats () {
     done
 }
 
-
 if [ $# -eq 0 ] || [[ "$1" != --* ]]; then
     say "provide one action (see --help)"
     exit 1
