@@ -32,7 +32,7 @@ make_dot_ocamlformat () {
     local path="$1"
     cat > "$path" << EOF
 
-version=0.21.1
+version=0.20.1
 wrap-fun-args=false
 let-binding-spacing=compact
 field-space=loose
