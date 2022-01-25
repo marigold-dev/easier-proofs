@@ -30,5 +30,5 @@ doc: # Generate odoc
 
 .PHONY: check-linting
 check-linting:
-	@src/tooling/lint.sh --check-ocamlformat
+	@src/tooling/lint.sh --update-ocamlformat
 	@dune build @fmt
