@@ -24,7 +24,7 @@ end
 coq_files =
   Dir.glob(File.join(full_path, "*.v")) 
 for coq_file_name in coq_files.sort do
-    command = "cd #{full_path} && #{easier_proofs_path}/_build/default/#{examples_path}/#{target_path}/bin/main.exe #{File.basename(coq_file_name)}"
+    command = "cd #{full_path} && #{easier_proofs_path}/_build/default/#{examples_path}/#{target_path}/easier_proofs.exe #{File.basename(coq_file_name)}"
   system(command)
 end
 
