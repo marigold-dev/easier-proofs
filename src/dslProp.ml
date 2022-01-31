@@ -24,6 +24,8 @@
 (*****************************************************************************)
 
 open Ast
+open GenerateProofs
+open Format
 
 let args_ l = Some (List.map (fun arg -> ASTArg (fst arg, snd arg)) l)
 
@@ -40,6 +42,10 @@ let atom str = ASTAtom str
 let prop name ?(context = (None, None)) ?(hints = []) assertt =
   ASTProp
     {assert_name = name; qtf = fst context; args = snd context; assertt; hints}
+
+let run program =
+  let fmt = formatter_of_out_channel stdout in
+  generate_proof fmt program
 
 let to_proofs blocks = ASTBlocks blocks
 

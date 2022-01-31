@@ -1,2 +1,2 @@
 (library
- (name dslprop))
+ (public_name easier_proof))
