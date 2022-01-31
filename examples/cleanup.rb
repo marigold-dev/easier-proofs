@@ -26,6 +26,6 @@ for aux_file_name in remove_files_aux.sort do
 end
 
 # Remove 
-  system("rm Makefile Makefile.conf _CoqProject .lia.cache")
+  system("rm Makefile Makefile.conf _CoqProject")
 
 

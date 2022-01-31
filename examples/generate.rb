@@ -10,7 +10,7 @@ end
 easier_proofs_path, examples_path, target_path = ARGV
 full_path = File.join(easier_proofs_path, examples_path, target_path)
 
-# Generate
+# Generate to Coq by coq-of-ocaml
 
 generate_files =
   Dir.glob(File.join(full_path, "*.ml"))
@@ -19,7 +19,7 @@ for ocaml_file_name in generate_files.sort do
   system(command)
 end
 
-# Generate proof by easier-proofs
+# Generate proofs by easier-proofs
 
 coq_files =
   Dir.glob(File.join(full_path, "*.v")) 
