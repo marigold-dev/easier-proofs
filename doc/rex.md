@@ -56,6 +56,9 @@ It uses to solve the case of disjunction on the left with the `left` tactic.
 #### Disjunction - right
 It uses to solve the case of disjunction on the right with the `right` tactic.
 
+#### Hint
+TODO
+
 ### Syntax in easier-proofs
 
 - `forall args`
@@ -90,4 +93,18 @@ to_proofs [
 
 ## What easier-proofs does not have at the moment
 
-## Projects trial
+<!--https://coq.inria.fr/refman/proof-engine/tactics.html-->
+
+### Basic proof
+
+#### Proof mode
+`Defined`
+
+#### Tactics
+
+#### Reasoning with equalities
+
+#### Reasoning with inductive types
+
+### Automatic solvers
+
