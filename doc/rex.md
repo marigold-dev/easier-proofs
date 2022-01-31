@@ -42,7 +42,7 @@ These are the proofs that can be solved by using the `crush` tactic.
 The keyword of this helper is `straight`.
 
 #### Case analysis 
-It uses to solve the case analysis, the helper will first called the `destruct` tactic and then the `crush` tactic.
+`case`, it uses to solve the case analysis, the helper will first called the `destruct` tactic and then the `crush` tactic.
 
 #### Induction 
 It uses to solve the case of induction by using the `induction` tactic and then the `crush` tactic.
@@ -57,6 +57,37 @@ It uses to solve the case of disjunction on the left with the `left` tactic.
 It uses to solve the case of disjunction on the right with the `right` tactic.
 
 ### Syntax in easier-proofs
+
+- `agrs []`
+- `forall args`
+- `case target`
+- `induction target`
+- `straight`
+- `atom ""`
+- `prop "" ~context:() ~hints:[] assert`
+- `to_proofs blocks`
+- `block name asserts`
+
+- `=`: `=.=`
+- `!=`: `=!=`
+- `&`: `&^`
+- `|`: `|^`
+- `->`: `|->`
+
+#### Structure of a proof 
+
+```
+to_proofs [
+    block "comments line of the proof" [
+        prop 
+        "proof_name" 
+        ~context:(forall [("arg","type")])
+        (atom "left proof statement" =.= atom "right proof statement" >> helpers)
+        ~hints:[]
+    ]
+]
+```
+
 
 ## What easier-proofs does not have at the moment
 
