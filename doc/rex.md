@@ -58,7 +58,6 @@ It uses to solve the case of disjunction on the right with the `right` tactic.
 
 ### Syntax in easier-proofs
 
-- `agrs []`
 - `forall args`
 - `case target`
 - `induction target`
