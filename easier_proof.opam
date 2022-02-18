@@ -14,9 +14,9 @@ depends: [
   "ocamlformat" {>= "0.20.1"}
 ]
 build: [
-  ["dune" "subst"] {dev}
-  ["sh" "cd examples && ./configure.sh"] {coq:installed}
+  ["sh" "-c" "cd examples && ./configure.sh"] {coq:installed}
   [make] {coq:installed}
+  ["dune" "subst"] {dev}
   [
     "dune"
     "build"
