@@ -15,6 +15,8 @@ depends: [
 ]
 build: [
   ["dune" "subst"] {dev}
+  ["sh" "-c" "cd examples && ./configure.sh"] {coq:installed}
+  [make "-C" "-j%{jobs}%"] {coq:installed}
   [
     "dune"
     "build"
