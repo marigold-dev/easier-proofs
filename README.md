@@ -1,5 +1,11 @@
 # easier-proofs
-This project aims to help making proofs easier. This tool is using the `Coq` Proof Assistance.
+This project aims to help making proofs easier by providing a DSL which can express assertions and proof. This tool is using the `Coq` Proof Assistance.
+
+## Use easier-proof as a library in your project.
+
+You have to clone easier-proof and install it locally with `opam install .` at the root of the project.
+After that you can add "easier_proof" in your dune "librairies" stanza.
+
 
 ## How to use it
 
@@ -7,7 +13,7 @@ The [`crush`](https://github.com/jwiegley/coq-haskell/blob/master/src/Crush.v) c
 
 Let us consider this simple example with the commutative property of addition on natural numbers.
 
-First of all, we have this OCaml code.
+First of all, we have this OCaml code in a "proof" directory, into your entire project.
 
 ```ocaml
 type nat =
@@ -52,20 +58,25 @@ We are using the [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) (
 This OCaml code 
 
 ```ocaml
-to_proofs [
-    block "commutative property of Nat addition" [
-      prop "add_right_zero" ~context:(forall [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
+open Easier_proof.DslProp
 
-      prop "add_s" ~context:(forall [("x","nat");("y","nat")]) ((atom "S (add x y)" =.= atom "add x (S y)") >> induction "x");
 
-      prop "add_commut"
-        ~context:(forall [("x","nat");("y","nat")])
-        ((atom "add x y" =.= atom "add y x") >> induction "x")
-        ~axioms:["add_right_zero";"add_s"]
-    ]
+let t = to_proofs [
+  block "commutative property of Nat addition" [
+    prop "add_right_zero" ~context:(forall [("n","nat")]) ((atom "add n Zero" =.= atom "n") >> induction "n");
+
+    prop "add_s" ~context:(forall [("x","nat");("y","nat")]) ((atom "S (add x y)" =.= atom "add x (S y)") >> induction "x");
+
+    prop "add_commut"
+      ~context:(forall [("x","nat");("y","nat")])
+      ((atom "add x y" =.= atom "add y x") >> induction "x")
+      ~hints:["add_right_zero";"add_s"]
   ]
+]
+
+let _ = run t
 ```
-express the two needed lemmas above and the commutative.
+express the two needed lemmas above and the commutative, and run the translation.
 
 The code below is the Coq proof automatically generated from the OCaml DSL code above.
 
@@ -79,28 +90,20 @@ Fact add_right_zero : forall  (n:nat) , add n Zero = n.
 induction n;crush.
 Qed.
 
-Fact add_s : forall  (x:nat) 
- (y:nat) , S (add x y) = add x (S y).
+Fact add_s : forall  (x:nat) (y:nat) , S (add x y) = add x (S y).
            
 induction x;crush.
 Qed.
 
-Fact add_commut : forall  (x:nat) 
- (y:nat) , add x y = add y x.
+Fact add_commut : forall  (x:nat) (y:nat) , add x y = add y x.
            
 #[local] Hint Rewrite add_right_zero.
-
 #[local] Hint Rewrite add_s.
 induction x;crush.
 Qed.
  (**END OF PROOFS**)
 
 ```
-
-## Build the source code
-
-First we need to build our source code by `make`.
-To run the test, simply do `make test`.
 
 ## Documentation
 
